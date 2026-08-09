@@ -1,0 +1,26 @@
+{
+  "name": "@openpencil/web",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "dev:host": "nuxt dev --host",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "clean": "rm -rf .nuxt .output .turbo",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix --cache",
+    "typecheck": "nuxi typecheck"
+  },
+  "dependencies": {
+    "@openpencil/ui": "workspace:*",
+    "nuxt": "catalog:core",
+    "vue": "catalog:core",
+    "vue-router": "catalog:core"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "catalog:linting"
+  }
+}

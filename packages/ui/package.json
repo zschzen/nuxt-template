@@ -1,0 +1,45 @@
+{
+  "name": "@openpencil/ui",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./nuxt.config.ts"
+  },
+  "scripts": {
+    "playground": "nuxi dev .playground",
+    "clean": "rm -rf .nuxt .playground/.nuxt .turbo",
+    "postinstall": "nuxi prepare .playground",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix --cache",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@unovis/ts": "catalog:ui",
+    "@unovis/vue": "catalog:ui",
+    "vaul-vue": "catalog:ui",
+    "vue-sonner": "catalog:ui"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "catalog:icon",
+    "@lucide/vue": "catalog:ui",
+    "@nuxt/eslint": "catalog:linting",
+    "@nuxt/image": "catalog:modules",
+    "@nuxtjs/color-mode": "catalog:modules",
+    "@unocss/nuxt": "catalog:styling",
+    "@unocss/preset-icons": "catalog:styling",
+    "class-variance-authority": "catalog:ui",
+    "clsx": "catalog:ui",
+    "nuxt": "catalog:core",
+    "reka-ui": "catalog:ui",
+    "shadcn-nuxt": "catalog:ui",
+    "tailwind-merge": "catalog:ui",
+    "typescript": "catalog:core",
+    "unocss": "catalog:styling",
+    "unocss-preset-animations": "catalog:styling",
+    "unocss-preset-better-breakpoints": "catalog:styling",
+    "unocss-preset-shadcn": "catalog:ui",
+    "vue": "catalog:core",
+    "vue-router": "catalog:core",
+    "vue-tsc": "catalog:types"
+  }
+}

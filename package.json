@@ -1,0 +1,39 @@
+{
+  "name": "openpencil",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.20.0",
+  "description": "OpenPencil monorepo.",
+  "author": "",
+  "keywords": [],
+  "scripts": {
+    "dev": "dotenv -- turbo run dev",
+    "dev:host": "dotenv -- turbo run dev -- --host",
+    "build": "dotenv -- turbo run build",
+    "preview": "dotenv -- turbo run preview",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "typecheck": "dotenv -- turbo run typecheck",
+    "test": "turbo run test:run",
+    "clean": "turbo run clean && rm -rf node_modules/.cache .turbo",
+    "prepare": "husky",
+    "taze": "taze minor -wIr"
+  },
+  "devDependencies": {
+    "@antfu/ni": "catalog:devtools",
+    "@nuxt/eslint": "catalog:linting",
+    "@openpencil/eslint-config": "workspace:*",
+    "dotenv-cli": "catalog:devtools",
+    "eslint": "catalog:linting",
+    "husky": "catalog:git-hooks",
+    "lint-staged": "catalog:git-hooks",
+    "taze": "catalog:devtools",
+    "turbo": "catalog:devtools"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,vue}": [
+      "eslint --cache --fix"
+    ]
+  }
+}

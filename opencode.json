@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "lsp": true,
+  "plugin": ["@dietrichgebert/ponytail", "lgpd-skills@git+https://github.com/goul4rt/lgpd-skills.git"],
+  "mcp": {
+    "lean-ctx": {
+      "type": "local",
+      "command": ["lean-ctx"],
+      "enabled": true
+    },
+    "open-pencil": {
+      "type": "local",
+      "command": ["openpencil-mcp"],
+      "enabled": true
+    }
+  }
+}

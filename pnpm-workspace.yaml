@@ -1,0 +1,87 @@
+packages:
+  - packages/*
+  - apps/*
+  - '!**/test/**'
+  - '!**/__tests__/**'
+
+cleanupUnusedCatalogs: true
+shamefullyHoist: true
+autoInstallPeers: true
+catalogMode: prefer
+
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  maplibre-gl: true
+  sharp: true
+  unrs-resolver: true
+  vue-demi: true
+
+catalogs:
+  core:
+    nuxt: ^4.5.1
+    typescript: ^6.0.3
+    vue: ^3.5.39
+    vue-router: ^5.1.0
+
+  devtools:
+    '@antfu/ni': ^30.2.0
+    dotenv-cli: ^11.0.0
+    taze: ^19.14.1
+    turbo: ^2.10.8
+
+  git-hooks:
+    husky: ^9.1.7
+    lint-staged: ^17.0.8
+
+  icon:
+    '@iconify-json/lucide': ^1.2.115
+
+  linting:
+    '@antfu/eslint-config': ^9.1.0
+    '@unocss/eslint-plugin': ^66.7.5
+    '@nuxt/eslint': ^1.16.0
+    eslint: ^10.6.0
+
+  modules:
+    '@nuxt/image': ^2.1.0
+    '@nuxtjs/color-mode': ^4.0.1
+
+  styling:
+    '@unocss/nuxt': ^66.7.5
+    '@unocss/preset-icons': ^66.7.5
+    unocss: ^66.7.5
+    unocss-preset-animations: ^1.3.0
+    unocss-preset-better-breakpoints: ^0.0.1
+
+  types:
+    vue-tsc: ^3.3.6
+
+  ui:
+    '@unovis/ts': ^1.6.7
+    '@unovis/vue': ^1.6.7
+    class-variance-authority: ^0.7.1
+    clsx: ^2.1.1
+    '@lucide/vue': ^1.29.0
+    reka-ui: ^2.10.1
+    shadcn-nuxt: ^2.8.1
+    tailwind-merge: ^3.6.0
+    unocss-preset-shadcn: ^1.0.1
+    vaul-vue: ^0.4.1
+    vue-sonner: ^2.0.9
+
+minimumReleaseAgeExclude:
+  - '@turbo/darwin-64@2.10.0'
+  - '@turbo/darwin-arm64@2.10.0'
+  - '@turbo/linux-64@2.10.0'
+  - '@turbo/linux-arm64@2.10.0'
+  - '@turbo/windows-64@2.10.0'
+  - '@turbo/windows-arm64@2.10.0'
+  - turbo@2.10.0
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - vue-demi
