@@ -15,12 +15,20 @@
     "typecheck": "nuxi typecheck"
   },
   "dependencies": {
+    "@pinia/nuxt": "catalog:core",
+    "@template/env": "workspace:*",
     "@template/ui": "workspace:*",
+    "@vueuse/core": "catalog:vueuse",
+    "@vueuse/nuxt": "catalog:vueuse",
     "nuxt": "catalog:core",
+    "pinia": "catalog:core",
     "vue": "catalog:core",
     "vue-router": "catalog:core"
   },
   "devDependencies": {
-    "@nuxt/eslint": "catalog:linting"
+    "@nuxt/eslint": "catalog:linting",
+    "@types/web-push": "catalog:",
+    "@vite-pwa/nuxt": "catalog:pwa",
+    "web-push": "catalog:pwa"
   }
 }
