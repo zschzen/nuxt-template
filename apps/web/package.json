@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "catalog:linting",
-    "@types/web-push": "catalog:",
+    "@types/web-push": "catalog:types",
     "@vite-pwa/nuxt": "catalog:pwa",
     "web-push": "catalog:pwa"
   }

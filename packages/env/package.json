@@ -9,6 +9,6 @@
     "zod": "catalog:validation"
   },
   "devDependencies": {
-    "typescript": "catalog:core"
+    "typescript": "catalog:types"
   }
 }

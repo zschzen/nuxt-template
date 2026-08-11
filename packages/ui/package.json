@@ -35,7 +35,7 @@
     "reka-ui": "catalog:ui",
     "shadcn-nuxt": "catalog:ui",
     "tailwind-merge": "catalog:ui",
-    "typescript": "catalog:core",
+    "typescript": "catalog:types",
     "unocss": "catalog:styling",
     "unocss-preset-animations": "catalog:styling",
     "unocss-preset-better-breakpoints": "catalog:styling",
