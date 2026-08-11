@@ -1,9 +1,11 @@
 {
-  "name": "@openpencil/ui",
+  "name": "@template/ui",
   "type": "module",
   "private": true,
   "exports": {
-    ".": "./nuxt.config.ts"
+    ".": "./nuxt.config.ts",
+    "./components/*": "./app/components/*",
+    "./lib/*": "./app/lib/*"
   },
   "scripts": {
     "playground": "nuxi dev .playground",

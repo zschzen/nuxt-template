@@ -1,4 +1,4 @@
-# OpenPencil
+# Template
 
 ## Stack
 
@@ -38,7 +38,7 @@ pnpm dev
 ## Adding Components
 
 ```bash
-pnpm --filter @openpencil/ui dlx shadcn-vue add button
+pnpm --filter @template/ui dlx shadcn-vue add button
 ```
 
 ## License

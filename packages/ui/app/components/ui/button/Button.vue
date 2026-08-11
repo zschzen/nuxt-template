@@ -2,7 +2,7 @@
 import type { PrimitiveProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import type { ButtonVariants } from '.'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { Primitive } from 'reka-ui'
 import { buttonVariants } from '.'
 

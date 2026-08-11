@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { toggleVariants } from '@openpencil/ui/components/ui/toggle'
+import type { toggleVariants } from '@template/ui/components/ui/toggle'
 import type { VariantProps } from 'class-variance-authority'
 import type { ToggleGroupRootEmits, ToggleGroupRootProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { reactiveOmit } from '@vueuse/core'
 import { ToggleGroupRoot, useForwardPropsEmits } from 'reka-ui'
 import { provide } from 'vue'

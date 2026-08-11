@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     },
   },
 
-  extends: ['@openpencil/ui'],
+  extends: ['@template/ui'],
 
   modules: ['@nuxt/eslint'],
 

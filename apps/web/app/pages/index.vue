@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from '@openpencil/ui/components/ui/button'
+import { Button } from '@template/ui/components/ui/button'
 
 definePageMeta({
   layout: 'default',

@@ -1,3 +1,3 @@
-import config from '@openpencil/eslint-config'
+import config from '@template/eslint-config'
 
 export default config

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { DrawerDescriptionProps } from 'vaul-vue'
 import type { HTMLAttributes } from 'vue'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { reactiveOmit } from '@vueuse/core'
 import { DrawerDescription } from 'vaul-vue'
 

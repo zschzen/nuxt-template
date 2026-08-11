@@ -1,11 +1,11 @@
 // @ts-check
-import config from '@openpencil/eslint-config'
+import config from '@template/eslint-config'
 import withNuxt from './.playground/.nuxt/eslint.config.mjs'
 
 export default withNuxt(
   ...config,
   {
-    name: '@openpencil/ui',
+    name: '@template/ui',
     rules: {},
   },
 )

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { openpencil } = useAppConfig()
+const { template } = useAppConfig()
 </script>
 
 <template>
@@ -7,7 +7,7 @@ const { openpencil } = useAppConfig()
     <UiCard class="max-w-md w-full shadow-xl">
       <UiCardHeader class="space-y-1">
         <UiCardTitle class="text-3xl tracking-tight font-extrabold italic">
-          Welcome to {{ openpencil.ui.name }}
+          Welcome to {{ template.ui.name }}
         </UiCardTitle>
         <UiCardDescription class="text-lg">
           Explore and interact with the UI components built with Nuxt 4, Reka UI, and UnoCSS.

@@ -2,7 +2,7 @@
 import type { ContextMenuSubTriggerProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { ChevronRight } from '@lucide/vue'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { reactiveOmit } from '@vueuse/core'
 import {
   ContextMenuSubTrigger,

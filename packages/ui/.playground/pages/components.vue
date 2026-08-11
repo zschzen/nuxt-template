@@ -10,7 +10,7 @@ import {
   User,
 } from '@lucide/vue'
 
-const { openpencil } = useAppConfig()
+const { template } = useAppConfig()
 const email = ref('')
 const notifications = ref(true)
 const toggleValue = ref(false)
@@ -26,7 +26,7 @@ const toggleGroupValue = ref(['bold'])
       </h1>
       <p class="text-lg text-muted-foreground mt-3">
         A comprehensive guide to all available components in the
-        <span class="text-foreground font-mono font-semibold px-1.5 py-0.5 rounded bg-muted italic">{{ openpencil.ui.name }}</span> layer.
+        <span class="text-foreground font-mono font-semibold px-1.5 py-0.5 rounded bg-muted italic">{{ template.ui.name }}</span> layer.
       </p>
     </header>
 

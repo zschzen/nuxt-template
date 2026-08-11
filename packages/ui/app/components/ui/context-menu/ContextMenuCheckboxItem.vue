@@ -2,7 +2,7 @@
 import type { ContextMenuCheckboxItemEmits, ContextMenuCheckboxItemProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { Check } from '@lucide/vue'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { reactiveOmit } from '@vueuse/core'
 import {
   ContextMenuCheckboxItem,

@@ -1,5 +1,5 @@
 {
-  "name": "@openpencil/web",
+  "name": "@template/web",
   "type": "module",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "typecheck": "nuxi typecheck"
   },
   "dependencies": {
-    "@openpencil/ui": "workspace:*",
+    "@template/ui": "workspace:*",
     "nuxt": "catalog:core",
     "vue": "catalog:core",
     "vue-router": "catalog:core"

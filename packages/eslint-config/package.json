@@ -1,5 +1,5 @@
 {
-  "name": "@openpencil/eslint-config",
+  "name": "@template/eslint-config",
   "type": "module",
   "private": true,
   "exports": {

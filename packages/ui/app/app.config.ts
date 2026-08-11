@@ -1,8 +1,8 @@
 export default defineAppConfig({
-  openpencil: {
+  template: {
     ui: {
-      name: 'OpenPencil UI Layer',
-      description: 'Shared UI components and configurations for OpenPencil',
+      name: 'Template UI Layer',
+      description: 'Shared UI components and configurations for Template',
     },
   },
 })

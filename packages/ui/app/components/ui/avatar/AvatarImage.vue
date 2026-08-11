@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AvatarImageProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { AvatarImage } from 'reka-ui'
 
 const props = defineProps<AvatarImageProps & { class?: HTMLAttributes['class'] }>()

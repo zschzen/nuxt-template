@@ -1,7 +1,7 @@
 import antfu from '@antfu/eslint-config'
 
 /**
- * Shared ESLint base configuration for the OpenPencil monorepo.
+ * Shared ESLint base configuration for the Template monorepo.
  * Powered by @antfu/eslint-config.
  */
 export default await antfu(

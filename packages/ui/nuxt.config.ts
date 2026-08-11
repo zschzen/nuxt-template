@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   alias: {
-    '@openpencil/ui': resolve('./app'),
+    '@template/ui': resolve('./app'),
     '@': resolve('./app'),
   },
 

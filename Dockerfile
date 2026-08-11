@@ -23,7 +23,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build the web application
-RUN pnpm --filter @openpencil/web run build
+RUN pnpm --filter @template/web run build
 
 # Stage 2: Runner
 FROM node:24-slim AS runner

@@ -1,7 +1,7 @@
 export default defineAppConfig({
-  openpencil: {
+  template: {
     ui: {
-      name: 'OpenPencil UI Playground',
+      name: 'Template UI Playground',
     },
   },
 })

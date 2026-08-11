@@ -1,10 +1,10 @@
 {
-  "name": "openpencil",
+  "name": "template",
   "type": "module",
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@11.20.0",
-  "description": "OpenPencil monorepo.",
+  "description": "Template monorepo.",
   "author": "",
   "keywords": [],
   "scripts": {
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@antfu/ni": "catalog:devtools",
     "@nuxt/eslint": "catalog:linting",
-    "@openpencil/eslint-config": "workspace:*",
+    "@template/eslint-config": "workspace:*",
     "dotenv-cli": "catalog:devtools",
     "eslint": "catalog:linting",
     "husky": "catalog:git-hooks",

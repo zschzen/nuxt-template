@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AvatarFallbackProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { cn } from '@openpencil/ui/lib/utils'
+import { cn } from '@template/ui/lib/utils'
 import { AvatarFallback } from 'reka-ui'
 
 const props = defineProps<AvatarFallbackProps & { class?: HTMLAttributes['class'] }>()
