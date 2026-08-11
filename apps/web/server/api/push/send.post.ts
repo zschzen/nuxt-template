@@ -1,7 +1,3 @@
-import { webPush } from '../../utils/web-push'
-
-const { subscriptions } = await import('../../utils/push-store')
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { title, body: message, url } = body ?? {}

@@ -1,8 +1,6 @@
 // Store push subscription
 // ponytail: in-memory for template, swap to Redis/D1 in production
 
-const { subscriptions } = await import('../../utils/push-store')
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   if (!body?.endpoint) {
