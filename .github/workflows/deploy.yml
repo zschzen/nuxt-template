@@ -23,11 +23,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: pnpm/setup@v2
         with:
           version: 11.20.0
+          runtime: node@22
+          install: false
           cache: true
 
       - uses: actions/cache@v4
