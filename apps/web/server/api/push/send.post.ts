@@ -1,3 +1,5 @@
+import webPush from 'web-push'
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { title, body: message, url } = body ?? {}

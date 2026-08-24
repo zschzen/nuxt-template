@@ -6,7 +6,7 @@ packages:
 
 cleanupUnusedCatalogs: true
 shamefullyHoist: true
-autoInstallPeers: true
+autoInstallPeers: false
 catalogMode: prefer
 
 allowBuilds:

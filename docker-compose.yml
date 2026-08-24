@@ -9,7 +9,6 @@ services:
     env_file:
       - .env
     # volumes:
-    #   - ./data:/app/data # Uncomment if using a local file-based database like LibSQL
     restart: always
     healthcheck:
       test: [CMD, node, -e, "fetch('http://localhost:3000').then(r => r.status === 200 ? process.exit(0) : process.exit(1))"]

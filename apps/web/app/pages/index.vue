@@ -12,7 +12,7 @@ definePageMeta({
       Nuxt 4 Monorepo Template
     </h1>
     <p class="text-muted-foreground">
-      UnoCSS · shadcn-vue · Drizzle · Better Auth · i18n
+      UnoCSS · shadcn-vue · i18n
     </p>
     <Button variant="outline" as-child>
       <a
