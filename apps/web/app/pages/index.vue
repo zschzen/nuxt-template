@@ -12,7 +12,7 @@ type Note = {
 definePageMeta({ layout: 'default' })
 
 const nuxtApp = useNuxtApp()
-const pwa = computed(() => (nuxtApp.$pwa as { canInstall?: boolean, showInstallPrompt?: () => Promise<void> } | undefined))
+const pwa = computed(() => nuxtApp.$pwa)
 
 const supported = isOpfsSupported
 const online = useOnline()
@@ -180,9 +180,9 @@ onMounted(async () => {
           Persist storage
         </Button>
         <Button
-          v-if="pwa?.canInstall"
+          v-if="pwa?.showInstallPrompt"
           size="sm"
-          @click="pwa?.showInstallPrompt?.()"
+          @click="pwa?.install()"
         >
           Install app
         </Button>
