@@ -4,9 +4,6 @@ export default defineNuxtConfig({
   compatibilityDate: 'latest',
   app: {
     baseURL: '/nuxt-template/',
-    head: {
-      link: [{ rel: 'manifest', href: '/nuxt-template/manifest.webmanifest' }],
-    },
   },
   robots: {
     robotsTxt: false,

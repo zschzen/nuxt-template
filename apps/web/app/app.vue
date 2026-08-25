@@ -3,6 +3,7 @@
 
 <template>
   <NuxtLoadingIndicator />
+  <NuxtPwaManifest />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
