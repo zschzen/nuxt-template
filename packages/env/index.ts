@@ -4,9 +4,6 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
-
-  VAPID_PUBLIC_KEY: z.string().default(''),
-  VAPID_PRIVATE_KEY: z.string().default(''),
 })
 
 /**
