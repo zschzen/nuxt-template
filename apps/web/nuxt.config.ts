@@ -2,9 +2,16 @@
 export default defineNuxtConfig({
 
   compatibilityDate: 'latest',
+  app: {
+    baseURL: '/nuxt-template/',
+  },
+  robots: {
+    robotsTxt: false,
+  },
   site: {
     name: 'Template App',
     description: 'PWA-ready Nuxt template with offline support',
+    url: 'https://zschzen.github.io/',
   },
   devtools: { enabled: true },
 
@@ -27,8 +34,8 @@ export default defineNuxtConfig({
       theme_color: '#000000',
       background_color: '#000000',
       display: 'standalone',
-      scope: '/',
-      start_url: '/',
+      scope: '/nuxt-template/',
+      start_url: '/nuxt-template/',
       icons: [
         { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
         { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
