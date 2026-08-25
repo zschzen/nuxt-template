@@ -54,7 +54,18 @@ export default defineNuxtConfig({
         /^\/_?nuxt_devtools__\//,
         /^\/workbox-/,
       ],
-      globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
+      globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest,woff2}'],
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.bunny\.net\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'bunny-fonts',
+            expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [200] },
+          },
+        },
+      ],
     },
     devOptions: {
       enabled: false,
