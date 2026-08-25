@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: 'latest',
   app: {
     baseURL: '/nuxt-template/',
+    head: {
+      link: [{ rel: 'manifest', href: '/nuxt-template/manifest.webmanifest' }],
+    },
   },
   robots: {
     robotsTxt: false,
@@ -48,7 +51,7 @@ export default defineNuxtConfig({
       periodicSyncForUpdates: 3600,
     },
     workbox: {
-      navigateFallback: '/',
+      navigateFallback: '/nuxt-template/',
       navigateFallbackDenylist: [
         /^\/_nuxt\//,
         /^\/_?nuxt_devtools__\//,
