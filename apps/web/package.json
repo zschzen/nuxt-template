@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "@pinia/nuxt": "catalog:core",
+    "@takumi-rs/core": "catalog:",
     "@template/env": "workspace:*",
+    "@template/seo": "workspace:*",
     "@template/ui": "workspace:*",
     "@vueuse/core": "catalog:vueuse",
     "@vueuse/nuxt": "catalog:vueuse",

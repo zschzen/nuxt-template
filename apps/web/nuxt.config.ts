@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
 
   compatibilityDate: 'latest',
+  site: {
+    name: 'Template App',
+    description: 'PWA-ready Nuxt template with offline support',
+  },
   devtools: { enabled: true },
 
   nitro: {
@@ -10,7 +14,7 @@ export default defineNuxtConfig({
     },
   },
 
-  extends: ['@template/ui', '@template/storage'],
+  extends: ['@template/ui', '@template/storage', '@template/seo'],
 
   modules: ['@nuxt/eslint', '@vueuse/nuxt', '@vite-pwa/nuxt', '@pinia/nuxt'],
 
@@ -46,7 +50,7 @@ export default defineNuxtConfig({
       globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
     },
     devOptions: {
-      enabled: true,
+      enabled: false,
       type: 'module',
       navigateFallbackAllowlist: [/^\/$/],
     },
