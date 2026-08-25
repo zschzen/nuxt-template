@@ -1,12 +1,5 @@
-import { env } from '@template/env'
-
-const base = '/nuxt-template/'
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  app: {
-    baseURL: base,
-  },
 
   compatibilityDate: 'latest',
   devtools: { enabled: true },
@@ -17,7 +10,7 @@ export default defineNuxtConfig({
     },
   },
 
-  extends: ['@template/ui'],
+  extends: ['@template/ui', '@template/storage'],
 
   modules: ['@nuxt/eslint', '@vueuse/nuxt', '@vite-pwa/nuxt', '@pinia/nuxt'],
 
@@ -30,20 +23,32 @@ export default defineNuxtConfig({
       theme_color: '#000000',
       background_color: '#000000',
       display: 'standalone',
-      scope: base,
-      start_url: base,
+      scope: '/',
+      start_url: '/',
       icons: [
-        { src: `${base}icon-192.png`, sizes: '192x192', type: 'image/png' },
-        { src: `${base}icon-512.png`, sizes: '512x512', type: 'image/png' },
-        { src: `${base}icon-maskable.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+        { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+        { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
       ],
     },
     client: {
       installPrompt: true,
       periodicSyncForUpdates: 3600,
     },
+    workbox: {
+      navigateFallback: '/',
+      navigateFallbackDenylist: [
+        /^\/_nuxt\//,
+        /^\/_?nuxt_devtools__\//,
+        /^\/workbox-/,
+      ],
+      globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
+    },
     devOptions: {
-      enabled: false,
+      enabled: true,
+      type: 'module',
+      navigateFallbackAllowlist: [/^\/$/],
     },
   },
 
@@ -52,7 +57,6 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    server: {},
     optimizeDeps: {
       include: [
         '@vue/devtools-core',
@@ -75,14 +79,6 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       standalone: false,
-    },
-  },
-
-  runtimeConfig: {
-    vapidPublicKey: env.VAPID_PUBLIC_KEY,
-    vapidPrivateKey: env.VAPID_PRIVATE_KEY,
-    public: {
-      vapidPublicKey: env.VAPID_PUBLIC_KEY,
     },
   },
 

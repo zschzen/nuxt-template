@@ -1,9 +1,6 @@
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { createResolver } from '@nuxt/kit'
 
 const { resolve } = createResolver(import.meta.url)
-const currentDir = dirname(fileURLToPath(import.meta.url))
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -37,13 +34,13 @@ export default defineNuxtConfig({
 
   components: [
     {
-      path: join(currentDir, './app/components'),
+      path: resolve('./app/components'),
     },
   ],
 
   shadcn: {
     prefix: 'Ui',
-    componentDir: join(currentDir, './app/components/ui'),
+    componentDir: resolve('./app/components/ui'),
   },
 
   css: [
