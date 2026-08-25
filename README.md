@@ -15,6 +15,7 @@ PWA-ready Nuxt 4 monorepo with component library, env validation, and push notif
 ```
 ├── apps/
 │   └── web/                  # Main Nuxt application (PWA-enabled)
+│       └── design/           # pen.dev design files (.pen)
 ├── packages/
 │   ├── env/                  # Zod env validation (fail-fast typed config)
 │   ├── ui/                   # UI components (shadcn-vue + UnoCSS)
@@ -77,6 +78,10 @@ pnpm --filter <package> add <dep> catalog:<catalog-name>
 ```bash
 pnpm --filter @template/ui dlx shadcn-vue add button
 ```
+
+## Design
+
+App screens are mocked as [pen.dev](https://docs.pencil.dev) `.pen` files in `apps/web/design/` — JSON-based, versioned alongside code. Workflow and conventions: `apps/web/README.md`.
 
 ## License
 

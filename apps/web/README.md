@@ -35,7 +35,8 @@ pnpm dlx web-push@latest generate-vapid-keys
 │   ├── pages/            # File-based routing
 │   ├── app.vue           # Root component
 │   └── app.config.ts     # Runtime app config
-├── public/               # Static assets (icons, OPFS worker)
+├── design/                 # .pen design files (pen.dev) — see Design section
+├── public/                 # Static assets (icons, OPFS worker)
 ├── server/
 │   ├── api/push/         # Push subscription endpoints
 │   └── utils/            # Server utilities (web-push, push-store)
@@ -73,6 +74,20 @@ Configured via `@vite-pwa/nuxt` in `nuxt.config.ts`:
 | ----------- | ----------------------------------------------------- |
 | `usePush()` | Push notification subscribe/unsubscribe/permission    |
 | `useOpfs()` | OPFS file read/write/list/remove via dedicated worker |
+
+## Design
+
+`design/` holds [.pen files](https://docs.pencil.dev/core-concepts/pen-files) — pen.dev's JSON-based, Git-friendly design format. Each file mirrors the app's screens on an infinite canvas.
+
+- `design/home.pen` — screens for this app (currently the OPFS notes page from `app/pages/index.vue`)
+
+### Working with .pen files (agents included)
+
+- **Editing** — open the file in the [pen.dev](https://docs.pencil.dev) desktop app. The file must be open in the editor before any tool can access it.
+- **AI integration** — pen.dev exposes an MCP server (`pencil`) with an `execute` tool for programmatic design: [AI Integration docs](https://docs.pencil.dev/getting-started/ai-integration)
+- **No auto-save** — the editor never writes to disk automatically. After every change session, save explicitly (Ctrl/Cmd+S) and verify the file size on disk changed. Unsaved work is lost when the app closes.
+- **Schema** — node types, layout, and variables are defined by the .pen schema; if a property isn't in the schema it isn't supported. See the [developer docs](https://docs.pencil.dev/for-developers/the-pen-format).
+- **Design tokens** — colors, radii, and fonts are stored as document variables (`$primary`, `$border`, …) mirroring the shadcn theme in `packages/ui/uno.config.ts` (`blue`, radius `0.75`). Keep them in sync when the theme changes.
 
 ## Catalogs
 
