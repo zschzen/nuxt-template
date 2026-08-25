@@ -12,6 +12,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix --cache",
+    "pwa-assets": "pwa-assets-generator",
     "typecheck": "nuxi typecheck"
   },
   "dependencies": {
@@ -27,8 +28,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "catalog:linting",
-    "@types/web-push": "catalog:types",
-    "@vite-pwa/nuxt": "catalog:pwa",
-    "web-push": "catalog:pwa"
+    "@vite-pwa/assets-generator": "catalog:pwa",
+    "@vite-pwa/nuxt": "catalog:pwa"
   }
 }

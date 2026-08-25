@@ -26,6 +26,7 @@
     "@template/eslint-config": "workspace:*",
     "dotenv-cli": "catalog:devtools",
     "eslint": "catalog:linting",
+    "eslint-plugin-format": "catalog:linting",
     "husky": "catalog:git-hooks",
     "lint-staged": "catalog:git-hooks",
     "taze": "catalog:devtools",
