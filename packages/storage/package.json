@@ -1,0 +1,29 @@
+{
+  "name": "@template/storage",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": "./nuxt.config.ts",
+    "./workers/*": "./app/workers/*",
+    "./composables/*": "./app/composables/*"
+  },
+  "scripts": {
+    "clean": "rm -rf .nuxt .playground/.nuxt .turbo",
+    "postinstall": "nuxi prepare .playground",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix --cache",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "fflate": "catalog:storage"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "catalog:linting",
+    "nuxt": "catalog:core",
+    "typescript": "catalog:types",
+    "vue": "catalog:core",
+    "vue-tsc": "catalog:types"
+  }
+}
