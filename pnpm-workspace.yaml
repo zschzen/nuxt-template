@@ -59,6 +59,9 @@ catalogs:
   modules:
     '@nuxt/image': ^2.1.0
     '@nuxtjs/color-mode': ^4.0.1
+    '@nuxtjs/seo': ^5.3.14
+    'nuxt-ai-ready': ^2.0.1
+    'nuxt-skew-protection': ^1.5.1
 
   styling:
     '@unocss/nuxt': ^66.7.5
@@ -102,3 +105,6 @@ onlyBuiltDependencies:
   - sharp
   - unrs-resolver
   - vue-demi
+
+catalog:
+  '@takumi-rs/core': ^2.12.0
