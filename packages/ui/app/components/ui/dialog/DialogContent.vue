@@ -11,10 +11,14 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 
-const props = defineProps<DialogContentProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<DialogContentProps & {
+  class?: HTMLAttributes['class']
+  overlayClass?: HTMLAttributes['class']
+  hideClose?: boolean
+}>()
 const emits = defineEmits<DialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+const delegatedProps = reactiveOmit(props, 'class', 'overlayClass', 'hideClose')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
@@ -22,7 +26,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <DialogPortal>
     <DialogOverlay
-      class="bg-black/80 inset-0 fixed z-50 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0"
+      :class="cn(
+        'bg-black/80 inset-0 fixed z-50 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
+        props.overlayClass,
+      )"
     />
     <DialogContent
       v-bind="forwarded"
@@ -34,6 +41,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       <slot />
 
       <DialogClose
+        v-if="!props.hideClose"
         class="rounded-sm opacity-70 ring-offset-background transition-opacity right-4 top-4 absolute data-[state=open]:text-muted-foreground focus:outline-none data-[state=open]:bg-accent hover:opacity-100 disabled:pointer-events-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       >
         <div class="i-lucide-x h-4 w-4" />
