@@ -8,24 +8,24 @@ Shared SEO layer for Nuxt apps: search-engine essentials (robots, sitemap, OG im
 
 One dependency that installs every NuxtSEO module:
 
-| Module        | Purpose                                                       | Docs                                    |
-| ------------- | ------------------------------------------------------------- | --------------------------------------- |
-| robots        | `robots.txt` generation, per-route rules, dev noindex         | https://nuxtseo.com/docs/robots         |
-| sitemap       | Multi-sitemap `sitemap.xml` generation                        | https://nuxtseo.com/docs/sitemap        |
-| link-checker  | Crawls your app and reports broken internal links             | https://nuxtseo.com/docs/link-checker   |
-| og-image      | Dynamic OG image generation (templates + runtime rendering)   | https://nuxtseo.com/docs/og-image       |
-| schema-org    | JSON-LD structured data for rich results / answer engines     | https://nuxtseo.com/docs/schema-org     |
-| seo-utils     | Canonical URLs, title templates, meta defaults                | https://nuxtseo.com/docs/seo-utils      |
-| site-config   | `NUXT_SITE_*` env resolution, canonical URLs, title templates | https://nuxtseo.com/docs/site-config    |
+| Module       | Purpose                                                       | Docs                                  |
+| ------------ | ------------------------------------------------------------- | ------------------------------------- |
+| robots       | `robots.txt` generation, per-route rules, dev noindex         | https://nuxtseo.com/docs/robots       |
+| sitemap      | Multi-sitemap `sitemap.xml` generation                        | https://nuxtseo.com/docs/sitemap      |
+| link-checker | Crawls your app and reports broken internal links             | https://nuxtseo.com/docs/link-checker |
+| og-image     | Dynamic OG image generation (templates + runtime rendering)   | https://nuxtseo.com/docs/og-image     |
+| schema-org   | JSON-LD structured data for rich results / answer engines     | https://nuxtseo.com/docs/schema-org   |
+| seo-utils    | Canonical URLs, title templates, meta defaults                | https://nuxtseo.com/docs/seo-utils    |
+| site-config  | `NUXT_SITE_*` env resolution, canonical URLs, title templates | https://nuxtseo.com/docs/site-config  |
 
 Full bundle docs: https://nuxtseo.com/docs/nuxt-seo
 
 ### Standalone add-ons
 
-| Module                 | Purpose                                                                   | Docs                                                                                  |
-| ---------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| `nuxt-ai-ready`        | `llms.txt` generation and AI crawler optimization                         | https://nuxtseo.com/docs/ai-ready/getting-started/installation                        |
-| `nuxt-skew-protection` | Fixes ChunkLoadError / stale-chunk 404s during deployments (version skew) | https://nuxtseo.com/docs/skew-protection/getting-started/introduction                 |
+| Module                 | Purpose                                                                   | Docs                                                                  |
+| ---------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `nuxt-ai-ready`        | `llms.txt` generation and AI crawler optimization                         | https://nuxtseo.com/docs/ai-ready/getting-started/installation        |
+| `nuxt-skew-protection` | Fixes ChunkLoadError / stale-chunk 404s during deployments (version skew) | https://nuxtseo.com/docs/skew-protection/getting-started/introduction |
 
 ## Usage
 
@@ -60,12 +60,12 @@ Titles resolve automatically: pages without an explicit title show the site name
 
 ## Auto-generated endpoints
 
-| Endpoint        | Description                                                        |
-| --------------- | ------------------------------------------------------------------ |
-| `/robots.txt`   | Crawler rules — noindex in development by design                   |
-| `/sitemap.xml`  | XML sitemap for search engines                                     |
-| `/llms.txt`     | Markdown index for AI crawlers (`nuxt-ai-ready`)                   |
-| `/llms-full.txt`| Full page content in markdown for AI crawlers                      |
+| Endpoint         | Description                                      |
+| ---------------- | ------------------------------------------------ |
+| `/robots.txt`    | Crawler rules — noindex in development by design |
+| `/sitemap.xml`   | XML sitemap for search engines                   |
+| `/llms.txt`      | Markdown index for AI crawlers (`nuxt-ai-ready`) |
+| `/llms-full.txt` | Full page content in markdown for AI crawlers    |
 
 ## Versioning
 
