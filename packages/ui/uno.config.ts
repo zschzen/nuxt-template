@@ -58,14 +58,14 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       scale: 1.2,
-      cdn: 'https://esm.sh/',
     }),
     presetTypography(),
     presetWebFonts({
-      // provider: 'bunny',
+      provider: 'bunny',
       fonts: {
-        sans: 'Chivo',
-        mono: 'Chivo Mono',
+        sans: { name: 'Inter', weights: [400, 500, 600] },
+        serif: { name: 'Lora', weights: [400, 600] },
+        mono: { name: 'JetBrains Mono', weights: [400] },
       },
     }),
     presetAnimations(),
