@@ -17,7 +17,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "fflate": "catalog:storage"
+    "fflate": "catalog:storage",
+    "tinybase": "catalog:storage"
   },
   "devDependencies": {
     "@nuxt/eslint": "catalog:linting",

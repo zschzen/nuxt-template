@@ -1,10 +1,4 @@
-import type { OpfsEntry, OpfsRequest } from '../workers/opfs.worker'
-
-export type { OpfsEntry }
-
-export type OpfsWriteOptions = {
-  gzip?: boolean
-}
+import type { OpfsEntry, OpfsRequest, OpfsWriteOptions } from '../utils/types'
 
 const decoder = new TextDecoder()
 
@@ -45,17 +39,17 @@ function rpc<T>(req: WithoutId<OpfsRequest>): Promise<T> {
   })
 }
 
-export function opfsRead(name: string, options: OpfsWriteOptions = {}): Promise<Uint8Array | null> {
-  return rpc<Uint8Array | null>({ op: 'read', name, gzip: options.gzip })
+export function opfsRead(name: string): Promise<Uint8Array | null> {
+  return rpc<Uint8Array | null>({ op: 'read', name })
 }
 
-export async function opfsReadText(name: string, options: OpfsWriteOptions = {}): Promise<string | null> {
-  const bytes = await opfsRead(name, options)
+export async function opfsReadText(name: string): Promise<string | null> {
+  const bytes = await opfsRead(name)
   return bytes ? decoder.decode(bytes) : null
 }
 
-export async function opfsReadJson<T>(name: string, options: OpfsWriteOptions = {}): Promise<T | null> {
-  const text = await opfsReadText(name, options)
+export async function opfsReadJson<T>(name: string): Promise<T | null> {
+  const text = await opfsReadText(name)
   return text ? JSON.parse(text) as T : null
 }
 
@@ -76,14 +70,12 @@ export function opfsDelete(name: string): Promise<void> {
   return rpc<void>({ op: 'delete', name })
 }
 
-export function opfsExportZip(): Promise<Blob> {
-  return rpc<Uint8Array>({ op: 'exportZip' }).then(bytes =>
-    new Blob([bytes as BlobPart], { type: 'application/zip' }),
-  )
+export async function opfsExportZip(): Promise<Blob> {
+  const bytes = await rpc<Uint8Array>({ op: 'exportZip' })
+  return new Blob([bytes as BlobPart], { type: 'application/zip' })
 }
 
-export function opfsImportZip(file: File): Promise<void> {
-  return file.arrayBuffer().then(buffer =>
-    rpc<void>({ op: 'importZip', data: new Uint8Array(buffer) }),
-  )
+export async function opfsImportZip(file: File): Promise<void> {
+  const buffer = await file.arrayBuffer()
+  await rpc<void>({ op: 'importZip', data: new Uint8Array(buffer) })
 }

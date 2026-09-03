@@ -92,6 +92,9 @@ catalogs:
     fflate:
       specifier: ^0.8.2
       version: 0.8.3
+    tinybase:
+      specifier: ^9.6.0
+      version: 9.6.0
   styling:
     '@unocss/nuxt':
       specifier: ^66.7.5
@@ -298,6 +301,9 @@ importers:
       fflate:
         specifier: catalog:storage
         version: 0.8.3
+      tinybase:
+        specifier: catalog:storage
+        version: 9.6.0
     devDependencies:
       '@nuxt/eslint':
         specifier: catalog:linting
@@ -7475,6 +7481,107 @@ packages:
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
+
+  tinybase@9.6.0:
+    resolution: {integrity: sha512-d0mJrA74Q6XPRLWhMMphHSXuu2PBYL3ivqihtGStd9TsaMgzN9m7IzX/b4SK1cfsa3gRAtB1hBcAZnIw2pQ2jg==}
+    peerDependencies:
+      '@automerge/automerge-repo': ^2.5.6
+      '@capacitor-community/sqlite': ^8.1.1
+      '@cloudflare/workers-types': ^5.20260829.1
+      '@electric-sql/pglite': ^0.5.8
+      '@libsql/client': ^0.17.4
+      '@powersync/common': ^2.0.0
+      '@sinclair/typebox': ^0.34.52
+      '@sqlite.org/sqlite-wasm': ^3.53.0-build1
+      '@supabase/supabase-js': ^2.112.4
+      '@vlcn.io/crsqlite-wasm': ^0.16.0
+      arktype: ^2.2.3
+      better-sqlite3: ^12.11.1
+      bun: ^1.4.0
+      effect: ^3.22.1
+      electric-sql: ^0.12.1
+      expo: ^57.0.18
+      expo-sqlite: ^57.0.1
+      partykit: ^0.0.115
+      partysocket: ^1.3.0
+      pg: ^8.23.0
+      postgres: ^3.4.9
+      react: ^19.2.8
+      react-dom: ^19.2.8
+      react-native-mmkv: 4.3.2
+      react-native-sqlite-storage: ^6.0.1
+      solid-js: ^1.9.15
+      sqlite3: ^5.1.7
+      svelte: ^5.57.0
+      valibot: ^1.4.2
+      ws: ^8.21.3
+      yjs: ^13.6.32
+      zod: ^4.5.4
+    peerDependenciesMeta:
+      '@automerge/automerge-repo':
+        optional: true
+      '@capacitor-community/sqlite':
+        optional: true
+      '@cloudflare/workers-types':
+        optional: true
+      '@electric-sql/pglite':
+        optional: true
+      '@libsql/client':
+        optional: true
+      '@powersync/common':
+        optional: true
+      '@sinclair/typebox':
+        optional: true
+      '@sqlite.org/sqlite-wasm':
+        optional: true
+      '@supabase/supabase-js':
+        optional: true
+      '@vlcn.io/crsqlite-wasm':
+        optional: true
+      arktype:
+        optional: true
+      better-sqlite3:
+        optional: true
+      bun:
+        optional: true
+      effect:
+        optional: true
+      electric-sql:
+        optional: true
+      expo:
+        optional: true
+      expo-sqlite:
+        optional: true
+      partykit:
+        optional: true
+      partysocket:
+        optional: true
+      pg:
+        optional: true
+      postgres:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      react-native-mmkv:
+        optional: true
+      react-native-sqlite-storage:
+        optional: true
+      solid-js:
+        optional: true
+      sqlite3:
+        optional: true
+      svelte:
+        optional: true
+      valibot:
+        optional: true
+      ws:
+        optional: true
+      yjs:
+        optional: true
+      zod:
+        optional: true
 
   tinyclip@0.1.15:
     resolution: {integrity: sha512-uo33abH+Ays0xYaDysoBt494Hb3hsEczMpcC0MwFl773pazORx4fmvKhclhR1wonUbB6vvpRsvVMwnhfqeMc+A==}
@@ -16780,6 +16887,8 @@ snapshots:
       convert-hrtime: 5.0.0
 
   tiny-invariant@1.3.3: {}
+
+  tinybase@9.6.0: {}
 
   tinyclip@0.1.15: {}
 

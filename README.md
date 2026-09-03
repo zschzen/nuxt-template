@@ -10,6 +10,7 @@ Live at **https://zschzen.github.io/nuxt-template/**
 - [UnoCSS](https://unocss.dev) + [shadcn-vue](https://www.shadcn-vue.com)
 - [Turborepo](https://turborepo.dev) + pnpm workspaces
 - [PWA](https://vite-pwa-org.netlify.app/) — offline support, push notifications, OPFS storage
+- [TinyBase](https://tinybase.org) — reactive local-first store, persisted to OPFS via OpfsPersister
 - [NuxtSEO](https://nuxtseo.com) — robots, sitemap, schema.org, OG images, `llms.txt`
 - [Zod](https://zod.dev) — env validation at startup
 
@@ -23,7 +24,7 @@ Live at **https://zschzen.github.io/nuxt-template/**
 ├── packages/
 │   ├── env/                  # Zod env validation (fail-fast typed config)
 │   ├── seo/                  # Shared SEO layer (@nuxtjs/seo + AI-crawler support)
-│   ├── storage/              # OPFS storage composables (gzip, ZIP import/export)
+│   ├── storage/              # OPFS storage composables (gzip, ZIP import/export, TinyBase store)
 │   ├── ui/                   # UI components (shadcn-vue + UnoCSS)
 │   └── eslint-config/        # Shared ESLint config
 ├── pnpm-workspace.yaml       # Named catalog-managed dependency versions

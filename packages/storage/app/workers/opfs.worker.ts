@@ -1,15 +1,7 @@
+import type { OpfsEntry, OpfsRequest } from '../utils/types'
 /// <reference lib="webworker" />
-import { gunzipSync, gzipSync, unzipSync, zipSync } from 'fflate'
-
-export type OpfsEntry = { name: string, size: number }
-
-export type OpfsRequest
-  = | { id: number, op: 'read', name: string, gzip?: boolean }
-    | { id: number, op: 'write', name: string, data: string | Uint8Array, gzip?: boolean }
-    | { id: number, op: 'list' }
-    | { id: number, op: 'delete', name: string }
-    | { id: number, op: 'exportZip' }
-    | { id: number, op: 'importZip', data: Uint8Array }
+import { unzipSync, zipSync } from 'fflate'
+import { gzipCompress, gzipDecompress, isGzipped } from '../composables/compression'
 
 type Res
   = | { id: number, ok: true, result?: Uint8Array | null | number | OpfsEntry[] }
@@ -79,11 +71,15 @@ async function handle(req: OpfsRequest): Promise<HandleResult> {
       const raw = await readRaw(req.name)
       if (!raw)
         return null
-      return req.gzip ? gunzipSync(raw) : raw
+      // transparent compression: gzip'd files decompress on read regardless of how they were written
+      return isGzipped(raw) ? gzipDecompress(raw) : raw
     }
     case 'write': {
       const bytes = typeof req.data === 'string' ? encoder.encode(req.data) : req.data
-      const stored = req.gzip ? gzipSync(bytes) : bytes
+      const gzip = req.gzip
+      const stored = gzip
+        ? gzipCompress(bytes, typeof gzip === 'object' ? gzip : undefined)
+        : bytes
       await writeRaw(req.name, stored)
       return stored.length
     }
