@@ -8,9 +8,12 @@
       "command": ["lean-ctx"],
       "enabled": true
     },
-    "open-pencil": {
+    "playwright": {
       "type": "local",
-      "command": ["openpencil-mcp"],
+      "command": [
+        "npx",
+        "@playwright/mcp@latest"
+      ],
       "enabled": true
     }
   }
