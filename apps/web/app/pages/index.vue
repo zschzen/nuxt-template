@@ -13,8 +13,7 @@ type Entry = {
 
 definePageMeta({ layout: 'default' })
 
-const nuxtApp = useNuxtApp()
-const pwa = computed(() => nuxtApp.$pwa)
+const pwa = usePWA()
 
 const supported = isOpfsSupported
 const online = useOnline()
@@ -44,7 +43,7 @@ const selectedEntry = computed(() =>
 )
 
 const statusLabel = computed(() =>
-  `${pwa.value?.isPWAInstalled ? 'Installed' : 'Not installed'} · ${online.value ? 'Online' : 'Offline'}`,
+  `${pwa?.isPWAInstalled ? 'Installed' : 'Not installed'} · ${online.value ? 'Online' : 'Offline'}`,
 )
 
 function newNote() {
