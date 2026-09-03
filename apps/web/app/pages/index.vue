@@ -2,14 +2,13 @@
 import { Button } from '@template/ui/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@template/ui/components/ui/dialog'
 import { Separator } from '@template/ui/components/ui/separator'
-import { Switch } from '@template/ui/components/ui/switch'
 import { computed, onMounted, ref } from 'vue'
 
-type Note = {
+type Entry = {
   id: string
   title: string
   body: string
-  updatedAt: number
+  size: number
 }
 
 definePageMeta({ layout: 'default' })
@@ -21,117 +20,74 @@ const supported = isOpfsSupported
 const online = useOnline()
 const { persisted, refresh, requestPersist } = useStorageStatus()
 
-const entries = ref<{ name: string, size: number, title: string }[]>([])
-const gzip = ref(true)
-const lastStat = ref<{ raw: number, stored: number, updatedAt: number } | null>(null)
+const { store, notes, ready, reload } = useNotes()
+
+const entries = computed<Entry[]>(() =>
+  notes.value
+    .map(row => ({
+      id: row.id,
+      title: String(row.title ?? ''),
+      body: String(row.body ?? ''),
+      size: JSON.stringify(row).length,
+    })),
+)
 const selectedId = ref<string | null>(null)
 const title = ref('')
 const body = ref('')
 const busy = ref(false)
-const pendingDelete = ref<{ name: string, title: string } | null>(null)
+const pendingDelete = ref<Entry | null>(null)
 const deleteOpen = ref(false)
 
 const canSave = computed(() => !busy.value && title.value.trim().length > 0)
-const ratio = computed(() =>
-  lastStat.value && lastStat.value.raw > 0
-    ? Math.round((1 - lastStat.value.stored / lastStat.value.raw) * 100)
-    : 0,
+const selectedEntry = computed(() =>
+  entries.value.find(entry => entry.id === selectedId.value) ?? null,
 )
 
 const statusLabel = computed(() =>
   `${pwa.value?.isPWAInstalled ? 'Installed' : 'Not installed'} · ${online.value ? 'Online' : 'Offline'}`,
 )
 
-function timeAgo(ts: number) {
-  const s = Math.floor((Date.now() - ts) / 1000)
-  if (s < 60)
-    return 'Saved just now'
-  const m = Math.floor(s / 60)
-  if (m < 60)
-    return `Saved ${m}m ago`
-  const h = Math.floor(m / 60)
-  if (h < 24)
-    return `Saved ${h}h ago`
-  return `Saved ${new Date(ts).toLocaleDateString()}`
-}
-
-async function loadList() {
-  const all = await opfsList()
-  const files = all.filter(e => e.name.startsWith('note-') && e.name.endsWith('.json')).reverse()
-  entries.value = await Promise.all(files.map(async (entry) => {
-    const id = entry.name.replace(/^note-/, '').replace(/\.json$/, '')
-    const note = await opfsReadJson<Note>(entry.name, { gzip: gzip.value })
-      .catch(() => opfsReadJson<Note>(entry.name))
-    return { ...entry, title: note?.title || id }
-  }))
-}
-
-function noteName(id: string) {
-  return `note-${id}.json`
-}
-
-async function newNote() {
+function newNote() {
   selectedId.value = null
   title.value = ''
   body.value = ''
 }
 
-async function openNote(name: string) {
-  let note: Note | null
-  try {
-    note = await opfsReadJson<Note>(name, { gzip: gzip.value })
-  }
-  catch {
-    note = await opfsReadJson<Note>(name)
-  }
-  if (!note)
+function openNote(id: string) {
+  const entry = entries.value.find(entry => entry.id === id)
+  if (!entry)
     return
-  selectedId.value = note.id
-  title.value = note.title
-  body.value = note.body
+  selectedId.value = id
+  title.value = entry.title
+  body.value = entry.body
 }
 
-async function saveNote() {
+function saveNote() {
   if (!canSave.value)
     return
-  busy.value = true
-  try {
-    const id = selectedId.value ?? crypto.randomUUID()
-    const text = JSON.stringify({
-      id,
-      title: title.value.trim(),
-      body: body.value,
-      updatedAt: Date.now(),
-    })
-    const stored = await opfsWrite(noteName(id), text, { gzip: gzip.value })
-    lastStat.value = { raw: new Blob([text]).size, stored, updatedAt: Date.now() }
-    selectedId.value = id
-    await loadList()
-    await refresh()
-  }
-  finally {
-    busy.value = false
-  }
+  const id = selectedId.value ?? crypto.randomUUID()
+  store.value?.setRow('notes', id, {
+    title: title.value.trim(),
+    body: body.value,
+  })
+  selectedId.value = id
 }
 
 async function confirmDelete() {
   if (!pendingDelete.value)
     return
-  await opfsDelete(pendingDelete.value.name)
-  if (selectedId.value && noteName(selectedId.value) === pendingDelete.value.name)
+  store.value?.delRow('notes', pendingDelete.value.id)
+  if (selectedId.value === pendingDelete.value.id)
     await newNote()
-  await loadList()
   await refresh()
   deleteOpen.value = false
   pendingDelete.value = null
 }
 
-function askDelete(entry: { name: string, title: string }) {
+function askDelete(entry: Entry) {
   pendingDelete.value = {
-    name: entry.name,
-    title: selectedId.value && noteName(selectedId.value) === entry.name
-      ? (title.value.trim() || entry.title)
-      : entry.title,
+    ...entry,
+    title: entry.id === selectedId.value ? (title.value.trim() || entry.title) : entry.title,
   }
   deleteOpen.value = true
 }
@@ -154,7 +110,7 @@ async function importArchive(event: Event) {
   busy.value = true
   try {
     await opfsImportZip(file)
-    await loadList()
+    await reload()
     await refresh()
   }
   finally {
@@ -166,8 +122,9 @@ async function importArchive(event: Event) {
 onMounted(async () => {
   if (!supported)
     return
-  await loadList()
-  await refresh()
+  const api = await ready
+  if (api)
+    await refresh()
 })
 </script>
 
@@ -182,11 +139,6 @@ onMounted(async () => {
           <span class="rounded-full size-1.5" :class="online ? 'bg-green-500' : 'bg-orange-400'" />
           <span class="text-[11px] text-muted-foreground">{{ statusLabel }}</span>
         </div>
-        <span class="text-[11px] text-muted-foreground">·</span>
-        <label class="flex gap-2 cursor-pointer items-center">
-          <Switch v-model:checked="gzip" />
-          <span class="text-xs text-muted-foreground">gzip</span>
-        </label>
       </div>
     </header>
 
@@ -213,10 +165,10 @@ onMounted(async () => {
             @keydown.ctrl.s.prevent="saveNote"
             @keydown.meta.s.prevent="saveNote"
           >
-          <div v-if="lastStat" class="flex gap-[7px] items-center">
+          <div v-if="selectedEntry" class="flex gap-[7px] items-center">
             <span class="rounded-full bg-green-500 size-1.5" />
             <span class="text-xs text-muted-foreground font-mono">
-              {{ timeAgo(lastStat.updatedAt) }} · {{ formatStorageBytes(lastStat.stored) }} · gzip −{{ ratio }}%
+              {{ formatStorageBytes(selectedEntry.size) }} · autosaves
             </span>
           </div>
           <textarea
@@ -266,18 +218,18 @@ onMounted(async () => {
           <ul class="flex flex-col h-40 [scrollbar-width:thin] overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground [&::-webkit-scrollbar-track]:bg-border [&::-webkit-scrollbar]:w-1">
             <li
               v-for="entry in entries"
-              :key="entry.name"
+              :key="entry.id"
               class="group py-2.5 pl-0 pr-3 border-b border-border flex cursor-pointer items-center justify-between"
-              @click="openNote(entry.name)"
+              @click="openNote(entry.id)"
             >
               <div class="flex gap-2 items-center">
                 <span
-                  v-if="selectedId && noteName(selectedId) === entry.name"
+                  v-if="entry.id === selectedId"
                   class="rounded-full bg-green-500 size-1.5"
                 />
                 <span
                   class="text-[15px] leading-[1.2] font-serif"
-                  :class="selectedId && noteName(selectedId) === entry.name ? 'font-semibold text-foreground' : 'text-muted-foreground'"
+                  :class="entry.id === selectedId ? 'font-semibold text-foreground' : 'text-muted-foreground'"
                 >{{ entry.title }}</span>
               </div>
               <div class="flex gap-2.5 items-center">
@@ -328,10 +280,10 @@ onMounted(async () => {
               class="text-[11px] p-0 h-auto"
             >
               <a
-                href="https://github.com/101arrowz/fflate"
+                href="https://tinybase.org"
                 target="_blank"
                 rel="noopener"
-              >fflate</a>
+              >TinyBase</a>
             </Button>
             <template v-if="persisted === false">
               <span class="text-[11px] text-muted-foreground">·</span>
