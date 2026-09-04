@@ -1,7 +1,7 @@
-import type { MergeableStore } from 'tinybase'
+import type { Store } from 'tinybase'
 import type { Persister, Persists } from 'tinybase/persisters'
 import type { CompressionOptions, StoreApi, StoreOptions, TableRow } from '../utils/types'
-import { createMergeableStore } from 'tinybase'
+import { createStore } from 'tinybase'
 import { createCustomPersister } from 'tinybase/persisters'
 import { gzipCompress, gzipDecompress, isGzipped } from './compression'
 
@@ -13,7 +13,7 @@ const decoder = new TextDecoder()
 const stores = new Map<string, Promise<StoreApi>>()
 
 /**
- * Create (or reuse) a persistent TinyBase MergeableStore keyed by its OPFS file.
+ * Create (or reuse) a persistent TinyBase Store keyed by its OPFS file.
  * Loads once on init — a failed load throws before autosave starts, so the file
  * is never overwritten from an empty store — then autosaves on every change.
  * Compression is format-sniffed on read and flag-driven on write. Client-only.
@@ -32,7 +32,7 @@ export function createOpfsStore(options: StoreOptions = {}): Promise<StoreApi> {
 async function init(file: string, options: StoreOptions): Promise<StoreApi> {
   if (typeof window === 'undefined')
     throw new Error('createOpfsStore is client-only')
-  const store = createMergeableStore()
+  const store = createStore()
   // value-or-getter: the app owns compression state; the library reads it fresh at each write
   const getCompression = (): CompressionOptions =>
     typeof options.compression === 'function' ? options.compression() : options.compression ?? { enabled: false }
@@ -57,10 +57,10 @@ async function init(file: string, options: StoreOptions): Promise<StoreApi> {
  * SSR-safe: `store` stays null and `ready` resolves null on the server.
  */
 export function useOpfsStore(options: StoreOptions = {}): {
-  store: Ref<MergeableStore | null>
+  store: Ref<Store | null>
   ready: Promise<StoreApi | null>
 } {
-  const store = shallowRef<MergeableStore | null>(null)
+  const store = shallowRef<Store | null>(null)
 
   const ready = typeof window !== 'undefined'
     ? createOpfsStore(options)
@@ -82,7 +82,7 @@ export function useOpfsStore(options: StoreOptions = {}): {
  * magic-byte sniff on read so both formats load regardless of the flag.
  */
 async function createGzipOpfsPersister(
-  store: MergeableStore,
+  store: Store,
   file: string,
   getCompression: () => CompressionOptions,
 ): Promise<Persister<Persists>> {
@@ -126,7 +126,7 @@ async function createGzipOpfsPersister(
     () => 0,
     () => {},
     undefined,
-    3 as Persists,
+    1 as Persists,
   )
 }
 
@@ -134,10 +134,10 @@ async function createGzipOpfsPersister(
  * Reactive rows of a TinyBase table for Vue. Rows carry their row id as `id`.
  * SSR-safe: empty until the store resolves. Listener cleanup is scoped.
  */
-export function useTable(getStore: () => MergeableStore | null | undefined, tableId: string): Ref<TableRow[]> {
+export function useTable(getStore: () => Store | null | undefined, tableId: string): Ref<TableRow[]> {
   const rows = shallowRef<TableRow[]>([])
 
-  function sync(store: MergeableStore) {
+  function sync(store: Store) {
     rows.value = Object.entries(store.getTable(tableId)).map(([id, cells]) => ({ id, ...cells }))
   }
 

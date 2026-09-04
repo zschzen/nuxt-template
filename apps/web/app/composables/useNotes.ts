@@ -1,4 +1,4 @@
-import type { MergeableStore } from 'tinybase'
+import type { Store } from 'tinybase'
 import type { Ref } from 'vue'
 
 export type Note = {
@@ -13,7 +13,7 @@ export type Note = {
  * SSR-safe by construction — `useOpfsStore` guards the client-only init.
  */
 export function useNotes(): {
-  store: Ref<MergeableStore | null>
+  store: Ref<Store | null>
   notes: Ref<Array<Record<string, unknown> & { id: string }>>
   ready: Promise<StoreApi | null>
   reload: () => Promise<void>

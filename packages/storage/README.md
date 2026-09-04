@@ -40,7 +40,7 @@ await requestPersist() // opt out of eviction under storage pressure
 
 ## TinyBase store
 
-Reactive local-first store ([TinyBase](https://tinybase.org) `MergeableStore`), persisted to OPFS via `store.json` with auto-save. The module is domain-free: table names, schemas and migrations are consumer-supplied.
+Reactive local-first store ([TinyBase](https://tinybase.org) `Store`), persisted to OPFS via `store.json` with auto-save. The module is domain-free: table names, schemas and migrations are consumer-supplied.
 
 ```ts
 const { store, save, reload } = await createOpfsStore({

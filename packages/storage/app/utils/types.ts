@@ -1,4 +1,4 @@
-import type { MergeableStore } from 'tinybase'
+import type { Store } from 'tinybase'
 import type { Persister, Persists } from 'tinybase/persisters'
 
 /**
@@ -24,11 +24,11 @@ export type StoreOptions = {
   /** Compression policy: value or getter. Pass a getter to change at runtime; applies on the next autosave. Default: disabled. */
   compression?: StoreCompression
   /** Backend seam. Default: gzip-aware OpfsPersister on `file`. Compression does not apply to custom persisters. */
-  createPersister?: (store: MergeableStore) => Promise<Persister<Persists>>
+  createPersister?: (store: Store) => Promise<Persister<Persists>>
 }
 
 export type StoreApi = {
-  store: MergeableStore
+  store: Store
   save: () => Promise<void>
   reload: () => Promise<void>
 }
