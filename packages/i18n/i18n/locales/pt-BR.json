@@ -1,0 +1,10 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "new": "Novo",
+    "loading": "Carregando…",
+    "language": "Idioma"
+  }
+}
