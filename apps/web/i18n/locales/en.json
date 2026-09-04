@@ -1,0 +1,40 @@
+{
+  "web": {
+    "header": {
+      "title": "Local Notes"
+    },
+    "status": {
+      "installed": "Installed",
+      "notInstalled": "Not installed",
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "unsupported": {
+      "opfs": "This browser doesn't support OPFS (needs Chrome/Edge 102+, Firefox 111+, or Safari 16.4+). Data features are disabled."
+    },
+    "editor": {
+      "label": "Note name",
+      "save": "Save note",
+      "titlePlaceholder": "Untitled",
+      "bodyPlaceholder": "Start writing…",
+      "autosaves": "autosaves"
+    },
+    "list": {
+      "title": "Notes",
+      "new": "New note",
+      "import": "Import ZIP",
+      "export": "Export ZIP",
+      "deleteNote": "Delete note"
+    },
+    "footer": {
+      "localOnly": "Data never leaves this device",
+      "persist": "Persist",
+      "install": "Install",
+      "loading": "Loading local storage…"
+    },
+    "dialog": {
+      "deleteTitle": "Delete note?",
+      "deleteBody": "Permanently delete “{title}” from this device? This can’t be undone."
+    }
+  }
+}

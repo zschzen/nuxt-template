@@ -29,12 +29,13 @@ pnpm dlx web-push@latest generate-vapid-keys
 
 ```
 ├── app/
-│   ├── components/       # Page components
+│   ├── components/       # Page components (incl. LocaleSwitcher)
 │   ├── composables/      # usePush, useOpfs
 │   ├── layouts/          # Page layouts
 │   ├── pages/            # File-based routing
-│   ├── app.vue           # Root component
+│   ├── app.vue           # Root component (sets <html lang> via useLocaleHead)
 │   └── app.config.ts     # Runtime app config
+├── i18n/locales/           # App messages (en, pt-BR) — merged over @template/i18n `common.*`
 ├── design/                 # .pen design files (pen.dev) — see Design section
 ├── public/                 # Static assets (icons, OPFS worker)
 ├── server/
@@ -74,6 +75,10 @@ Configured via `@vite-pwa/nuxt` in `nuxt.config.ts`:
 | ----------- | ----------------------------------------------------- |
 | `usePush()` | Push notification subscribe/unsubscribe/permission    |
 | `useOpfs()` | OPFS file read/write/list/remove via dedicated worker |
+
+## i18n
+
+Extends `@template/i18n` (see `packages/i18n/README.md`): locales `en` + `pt-BR`, `no_prefix` strategy, lazy loading, cookie-based browser detection. Shared `common.*` keys come from the layer; app keys live under `web.*` in `i18n/locales/`.
 
 ## Design
 

@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { templateLocales } from '@template/i18n/locales'
+
 export default defineNuxtConfig({
 
   compatibilityDate: 'latest',
@@ -21,7 +23,16 @@ export default defineNuxtConfig({
     },
   },
 
-  extends: ['@template/ui', '@template/storage', '@template/seo'],
+  extends: ['@template/ui', '@template/storage', '@template/seo', '@template/i18n'],
+
+  // App messages (apps/web/i18n/locales/*.json) merge over @template/i18n `common.*`.
+  // Same objects as the layer (redeclaration replaces, not deep-merges).
+  i18n: {
+    // Canonical SEO URL; deliberately static (canonicals always point at prod).
+    // Origin only — the /nuxt-template/ subpath comes from the route itself.
+    baseUrl: 'https://zschzen.github.io',
+    locales: [...templateLocales],
+  },
 
   modules: ['@nuxt/eslint', '@vueuse/nuxt', '@vite-pwa/nuxt', '@pinia/nuxt'],
 
@@ -62,6 +73,17 @@ export default defineNuxtConfig({
           options: {
             cacheName: 'bunny-fonts',
             expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [200] },
+          },
+        },
+        {
+          // i18n messages are fetched at runtime (/_i18n/<hash>/<locale>/messages.json);
+          // cache them so locale switching keeps working offline
+          urlPattern: /\/_i18n\/.*\.json$/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'i18n-messages',
+            expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 30 },
             cacheableResponse: { statuses: [200] },
           },
         },

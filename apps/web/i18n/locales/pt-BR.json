@@ -1,0 +1,40 @@
+{
+  "web": {
+    "header": {
+      "title": "Notas locais"
+    },
+    "status": {
+      "installed": "Instalado",
+      "notInstalled": "Não instalado",
+      "online": "On-line",
+      "offline": "Off-line"
+    },
+    "unsupported": {
+      "opfs": "Este navegador não suporta OPFS (é necessário Chrome/Edge 102+, Firefox 111+ ou Safari 16.4+). Recursos de dados desativados."
+    },
+    "editor": {
+      "label": "Nome da nota",
+      "save": "Salvar nota",
+      "titlePlaceholder": "Sem título",
+      "bodyPlaceholder": "Comece a escrever…",
+      "autosaves": "salvamento automático"
+    },
+    "list": {
+      "title": "Notas",
+      "new": "Nova nota",
+      "import": "Importar ZIP",
+      "export": "Exportar ZIP",
+      "deleteNote": "Excluir nota"
+    },
+    "footer": {
+      "localOnly": "Os dados nunca saem deste dispositivo",
+      "persist": "Persistir",
+      "install": "Instalar",
+      "loading": "Carregando armazenamento local…"
+    },
+    "dialog": {
+      "deleteTitle": "Excluir nota?",
+      "deleteBody": "Excluir permanentemente “{title}” deste dispositivo? Não é possível desfazer."
+    }
+  }
+}

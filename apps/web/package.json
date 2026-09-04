@@ -10,7 +10,8 @@
     "preview": "nuxt preview",
     "clean": "rm -rf .nuxt .output .turbo",
     "postinstall": "nuxt prepare",
-    "lint": "eslint .",
+    "lint": "eslint . && pnpm i18n:check",
+    "i18n:check": "node ../../packages/i18n/check-locales.mjs ./i18n/locales",
     "lint:fix": "eslint . --fix --cache",
     "pwa-assets": "pwa-assets-generator",
     "typecheck": "nuxi typecheck"
@@ -19,6 +20,7 @@
     "@pinia/nuxt": "catalog:core",
     "@takumi-rs/core": "catalog:",
     "@template/env": "workspace:*",
+    "@template/i18n": "workspace:*",
     "@template/seo": "workspace:*",
     "@template/ui": "workspace:*",
     "@vueuse/core": "catalog:vueuse",

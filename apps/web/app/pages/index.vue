@@ -14,6 +14,7 @@ type Entry = {
 definePageMeta({ layout: 'default' })
 
 const pwa = usePWA()
+const { t } = useI18n()
 
 const supported = isOpfsSupported
 const online = useOnline()
@@ -43,7 +44,7 @@ const selectedEntry = computed(() =>
 )
 
 const statusLabel = computed(() =>
-  `${pwa?.isPWAInstalled ? 'Installed' : 'Not installed'} · ${online.value ? 'Online' : 'Offline'}`,
+  `${pwa?.isPWAInstalled ? t('web.status.installed') : t('web.status.notInstalled')} · ${online.value ? t('web.status.online') : t('web.status.offline')}`,
 )
 
 function newNote() {
@@ -131,9 +132,10 @@ onMounted(async () => {
   <div class="font-sans mx-auto p-8 flex flex-col gap-5 max-w-[672px] min-h-screen">
     <header class="flex items-center justify-between">
       <h1 class="text-sm text-foreground font-semibold">
-        Local Notes
+        {{ $t('web.header.title') }}
       </h1>
       <div class="flex gap-2.5 items-center">
+        <LocaleSwitcher />
         <div class="flex gap-1.5 items-center">
           <span class="rounded-full size-1.5" :class="online ? 'bg-green-500' : 'bg-orange-400'" />
           <span class="text-[11px] text-muted-foreground">{{ statusLabel }}</span>
@@ -145,21 +147,21 @@ onMounted(async () => {
 
     <ClientOnly>
       <div v-if="!supported" class="text-sm text-red-700 p-4 border border-red-300 rounded-md bg-red-50 dark:text-red-300 dark:border-red-800 dark:bg-red-950">
-        This browser doesn't support OPFS (needs Chrome/Edge 102+, Firefox 111+, or Safari 16.4+). Data features are disabled.
+        {{ $t('web.unsupported.opfs') }}
       </div>
 
       <template v-else>
         <section class="flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] text-muted-foreground tracking-[0.12em] font-medium uppercase">Note name</span>
+            <span class="text-[10px] text-muted-foreground tracking-[0.12em] font-medium uppercase">{{ $t('web.editor.label') }}</span>
             <Button :disabled="busy" @click="saveNote">
               <span class="i-lucide-save shrink-0 size-4" />
-              Save note
+              {{ $t('web.editor.save') }}
             </Button>
           </div>
           <input
             v-model="title"
-            placeholder="Untitled"
+            :placeholder="$t('web.editor.titlePlaceholder')"
             class="text-[30px] text-foreground leading-[1.2] font-semibold font-serif pb-1.5 pt-0.5 outline-none border-b border-border bg-transparent w-full placeholder:text-muted-foreground/60"
             @keydown.ctrl.s.prevent="saveNote"
             @keydown.meta.s.prevent="saveNote"
@@ -167,12 +169,12 @@ onMounted(async () => {
           <div v-if="selectedEntry" class="flex gap-[7px] items-center">
             <span class="rounded-full bg-green-500 size-1.5" />
             <span class="text-xs text-muted-foreground font-mono">
-              {{ formatStorageBytes(selectedEntry.size) }} · autosaves
+              {{ formatStorageBytes(selectedEntry.size) }} · {{ $t('web.editor.autosaves') }}
             </span>
           </div>
           <textarea
             v-model="body"
-            placeholder="Start writing…"
+            :placeholder="$t('web.editor.bodyPlaceholder')"
             class="text-base text-foreground leading-[1.7] font-serif px-[22px] py-5 outline-none border border-border rounded-sm bg-background h-[260px] w-full resize-none placeholder:text-muted-foreground/60"
           />
         </section>
@@ -180,13 +182,13 @@ onMounted(async () => {
         <section class="flex flex-col gap-2">
           <div class="flex items-center justify-between">
             <div class="flex gap-2 items-center">
-              <span class="text-[11px] text-muted-foreground tracking-[1px] font-medium uppercase">Notes</span>
+              <span class="text-[11px] text-muted-foreground tracking-[1px] font-medium uppercase">{{ $t('web.list.title') }}</span>
               <span class="text-xs text-muted-foreground font-mono">{{ entries.length }}</span>
             </div>
             <div class="flex gap-2 items-center">
               <Button :disabled="busy" @click="newNote">
                 <span class="i-lucide-plus shrink-0 size-4" />
-                New note
+                {{ $t('web.list.new') }}
               </Button>
               <label class="inline-flex cursor-pointer">
                 <input
@@ -201,7 +203,7 @@ onMounted(async () => {
                   :disabled="busy"
                 >
                   <span class="i-lucide-upload shrink-0 size-4" />
-                  Import ZIP
+                  {{ $t('web.list.import') }}
                 </Button>
               </label>
               <Button
@@ -210,7 +212,7 @@ onMounted(async () => {
                 @click="exportAll"
               >
                 <span class="i-lucide-download shrink-0 size-4" />
-                Export ZIP
+                {{ $t('web.list.export') }}
               </Button>
             </div>
           </div>
@@ -235,7 +237,7 @@ onMounted(async () => {
                 <span class="text-[11px] text-muted-foreground font-mono">{{ formatStorageBytes(entry.size) }}</span>
                 <Button
                   variant="ghost"
-                  aria-label="Delete note"
+                  :aria-label="$t('web.list.deleteNote')"
                   class="text-muted-foreground p-0 size-4 hover:text-destructive"
                   @click.stop="askDelete(entry)"
                 >
@@ -247,7 +249,7 @@ onMounted(async () => {
         </section>
 
         <footer class="mt-auto pt-3 border-t border-border flex items-center justify-between">
-          <span class="text-[11px] text-muted-foreground">Data never leaves this device</span>
+          <span class="text-[11px] text-muted-foreground">{{ $t('web.footer.localOnly') }}</span>
           <div class="flex flex-wrap gap-2 items-center">
             <Button
               variant="link"
@@ -291,7 +293,7 @@ onMounted(async () => {
                 class="text-[11px] p-0 h-auto"
                 @click="requestPersist"
               >
-                Persist
+                {{ $t('web.footer.persist') }}
               </Button>
             </template>
             <template v-if="pwa?.showInstallPrompt">
@@ -301,7 +303,7 @@ onMounted(async () => {
                 class="text-[11px] p-0 h-auto"
                 @click="pwa?.install()"
               >
-                Install
+                {{ $t('web.footer.install') }}
               </Button>
             </template>
           </div>
@@ -310,7 +312,7 @@ onMounted(async () => {
 
       <template #fallback>
         <p class="text-sm text-muted-foreground">
-          Loading local storage…
+          {{ $t('web.footer.loading') }}
         </p>
       </template>
     </ClientOnly>
@@ -322,10 +324,10 @@ onMounted(async () => {
         class="p-5 rounded-md gap-3 max-w-[360px] shadow-[0_12px_28px_rgba(0,0,0,0.15)] sm:max-w-[360px]"
       >
         <DialogTitle class="text-base tracking-normal font-semibold">
-          Delete note?
+          {{ $t('web.dialog.deleteTitle') }}
         </DialogTitle>
         <DialogDescription class="text-sm leading-[1.5]">
-          Permanently delete “{{ pendingDelete?.title }}” from this device? This can’t be undone.
+          {{ $t('web.dialog.deleteBody', { title: pendingDelete?.title }) }}
         </DialogDescription>
         <DialogFooter class="gap-2">
           <Button
@@ -333,14 +335,14 @@ onMounted(async () => {
             size="sm"
             @click="deleteOpen = false"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </Button>
           <Button
             variant="destructive"
             size="sm"
             @click="confirmDelete"
           >
-            Delete
+            {{ $t('common.delete') }}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -52,6 +52,35 @@
                   "children": [
                     {
                       "type": "frame",
+                      "id": "ty4Ww",
+                      "name": "Locale",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "SWV4M",
+                          "name": "EN",
+                          "fill": "$muted-fg",
+                          "content": "EN",
+                          "fontFamily": "$font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ZCWwC",
+                          "name": "PT",
+                          "fill": "$muted-fg",
+                          "content": "PT",
+                          "fontFamily": "$font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
                       "id": "CW0fU",
                       "name": "Installed",
                       "gap": 6,
