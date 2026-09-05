@@ -2,6 +2,19 @@
 
 All notable changes to `@template/storage` are documented here.
 
+## 0.2.0 — 2026-09-05
+
+### Fixed
+- Data loss on an unreadable store file: `load()` doesn't throw on a bad read, and `startAutoSave()` wrote an empty store over it. Autosave and `save()` now gate on `onIgnoredError`; `reload()` re-arms once the file is readable again.
+- Autoload now runs before autosave, matching TinyBase's order.
+
+### Added
+- `StoreApi.destroy()` — releases listeners and closes the broadcast channel.
+- `test/store.test.ts` + `test/compression.test.ts` (vitest, `pnpm --filter @template/storage test:run`) — cover `createOpfsStore`/`useOpfsStore`/`useTable` lifecycle (load, autosave, failed-load gate, reload, destroy, cache) and the gzip helpers. OPFS/Worker paths untested (no happy-dom OPFS implementation).
+
+### Changed
+- `createPersister` seam takes `onIgnoredError` as a second argument.
+
 ## 0.1.0 — 2026-09-03
 
 First release of the storage layer API.
