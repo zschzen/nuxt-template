@@ -38,6 +38,12 @@ export default defineNuxtConfig({
 
   pwa: {
     registerType: 'autoUpdate',
+    includeAssets: [
+      'favicon.ico',
+      'icon.svg',
+      'apple-touch-icon-180x180.png',
+      'apple-splash-*.png',
+    ],
     manifest: {
       name: 'Template App',
       short_name: 'Template',

@@ -1,0 +1,372 @@
+{
+  "version": "2.17",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Cgk4D",
+      "x": 0,
+      "y": 912,
+      "name": "Splash Screens",
+      "layout": "vertical",
+      "gap": 24,
+      "children": [
+        {
+          "type": "frame",
+          "id": "u5KjZ",
+          "name": "Devices",
+          "gap": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "qvodc",
+              "name": "Cell - iPhone 14",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DPgsx",
+                  "name": "Splash - iPhone 14 Portrait",
+                  "clip": true,
+                  "width": 1170,
+                  "height": 2532,
+                  "fill": "#000000",
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tycQQ",
+                      "x": 175.5,
+                      "y": 856.5,
+                      "name": "Icon",
+                      "width": 819,
+                      "height": 819,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 153.56,
+                          "id": "NU5Gi",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Tile",
+                          "fill": "#000000",
+                          "width": 819,
+                          "height": 819
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "y3HjD",
+                          "x": 204.75,
+                          "y": 179.16,
+                          "name": "Bowl",
+                          "fill": "#FFFFFF",
+                          "width": 409.5,
+                          "height": 153.56
+                        },
+                        {
+                          "type": "path",
+                          "id": "bFqfJ",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Stack mid",
+                          "geometry": "M128 160v96c0 26.5 57.3 48 128 48s128-21.5 128-48v-96c0 26.5-57.3 48-128 48s-128-21.5-128-48z",
+                          "viewBox": [
+                            0,
+                            0,
+                            512,
+                            512
+                          ],
+                          "fill": "#FFFFFF",
+                          "width": 819,
+                          "height": 819
+                        },
+                        {
+                          "type": "path",
+                          "id": "ri5U9",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Stack low",
+                          "geometry": "M128 256v96c0 26.5 57.3 48 128 48s128-21.5 128-48v-96c0 26.5-57.3 48-128 48s-128-21.5-128-48z",
+                          "viewBox": [
+                            0,
+                            0,
+                            512,
+                            512
+                          ],
+                          "fill": "#FFFFFF",
+                          "width": 819,
+                          "height": 819
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "gLQIM",
+                  "name": "Caption",
+                  "fill": "$muted-fg",
+                  "content": "iPhone 14 · 1170 × 2532",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nNcEM",
+              "name": "Cell - iPhone 16 Pro",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "p09ImJ",
+                  "name": "Splash - iPhone 16 Pro Portrait",
+                  "clip": true,
+                  "width": 1206,
+                  "height": 2622,
+                  "fill": "#000000",
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "e0Ljc",
+                      "x": 181,
+                      "y": 889,
+                      "name": "Icon",
+                      "width": 844,
+                      "height": 844,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 158.25,
+                          "id": "PP1Zc",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Tile",
+                          "fill": "#000000",
+                          "width": 844,
+                          "height": 844
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "Gtrv7",
+                          "x": 211,
+                          "y": 184.63,
+                          "name": "Bowl",
+                          "fill": "#FFFFFF",
+                          "width": 422,
+                          "height": 158.25
+                        },
+                        {
+                          "type": "path",
+                          "id": "u3Qlrs",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Stack mid",
+                          "geometry": "M128 160v96c0 26.5 57.3 48 128 48s128-21.5 128-48v-96c0 26.5-57.3 48-128 48s-128-21.5-128-48z",
+                          "viewBox": [
+                            0,
+                            0,
+                            512,
+                            512
+                          ],
+                          "fill": "#FFFFFF",
+                          "width": 844,
+                          "height": 844
+                        },
+                        {
+                          "type": "path",
+                          "id": "WeoBq",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Stack low",
+                          "geometry": "M128 256v96c0 26.5 57.3 48 128 48s128-21.5 128-48v-96c0 26.5-57.3 48-128 48s-128-21.5-128-48z",
+                          "viewBox": [
+                            0,
+                            0,
+                            512,
+                            512
+                          ],
+                          "fill": "#FFFFFF",
+                          "width": 844,
+                          "height": 844
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "G4473s",
+                  "name": "Caption",
+                  "fill": "$muted-fg",
+                  "content": "iPhone 16 Pro · 1206 × 2622",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Fxrkr",
+              "name": "Cell - iPad Air 11",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "o1Mov",
+                  "name": "Splash - iPad Air 11 Portrait",
+                  "clip": true,
+                  "width": 1640,
+                  "height": 2360,
+                  "fill": "#000000",
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ju5Xg",
+                      "x": 246,
+                      "y": 606,
+                      "name": "Icon",
+                      "width": 1148,
+                      "height": 1148,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 215.25,
+                          "id": "o18gst",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Tile",
+                          "fill": "#000000",
+                          "width": 1148,
+                          "height": 1148
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "STyTv",
+                          "x": 287,
+                          "y": 251.13,
+                          "name": "Bowl",
+                          "fill": "#FFFFFF",
+                          "width": 574,
+                          "height": 215.25
+                        },
+                        {
+                          "type": "path",
+                          "id": "WG974",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Stack mid",
+                          "geometry": "M128 160v96c0 26.5 57.3 48 128 48s128-21.5 128-48v-96c0 26.5-57.3 48-128 48s-128-21.5-128-48z",
+                          "viewBox": [
+                            0,
+                            0,
+                            512,
+                            512
+                          ],
+                          "fill": "#FFFFFF",
+                          "width": 1148,
+                          "height": 1148
+                        },
+                        {
+                          "type": "path",
+                          "id": "H0oFHE",
+                          "x": 0,
+                          "y": 0,
+                          "name": "Stack low",
+                          "geometry": "M128 256v96c0 26.5 57.3 48 128 48s128-21.5 128-48v-96c0 26.5-57.3 48-128 48s-128-21.5-128-48z",
+                          "viewBox": [
+                            0,
+                            0,
+                            512,
+                            512
+                          ],
+                          "fill": "#FFFFFF",
+                          "width": 1148,
+                          "height": 1148
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "LQtpm",
+                  "name": "Caption",
+                  "fill": "$muted-fg",
+                  "content": "iPad Air 11\" · 1640 × 2360",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "bg": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "fg": {
+      "type": "color",
+      "value": "#0A0A0A"
+    },
+    "muted-fg": {
+      "type": "color",
+      "value": "#737373"
+    },
+    "muted": {
+      "type": "color",
+      "value": "#F5F5F5"
+    },
+    "border": {
+      "type": "color",
+      "value": "#E5E5E5"
+    },
+    "primary": {
+      "type": "color",
+      "value": "#2563EB"
+    },
+    "primary-fg": {
+      "type": "color",
+      "value": "#EFF6FF"
+    },
+    "green-bg": {
+      "type": "color",
+      "value": "#DCFCE7"
+    },
+    "green-fg": {
+      "type": "color",
+      "value": "#15803D"
+    },
+    "green-bar": {
+      "type": "color",
+      "value": "#22C55E"
+    },
+    "font": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "radius": {
+      "type": "number",
+      "value": 8
+    }
+  },
+  "imports": {
+    "l": "pencil:shadcn.lib.pen"
+  },
+  "fileToken": "3f24a3ec-c41c-4c31-8dc4-6cc85ea46c11"
+}
