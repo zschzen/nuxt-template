@@ -4,6 +4,7 @@ import type { Ref } from 'vue'
 import type { CompressionOptions, StoreApi, StoreOptions, TableRow } from '../utils/types'
 import { createStore } from 'tinybase'
 import { createCustomPersister } from 'tinybase/persisters'
+import { opfsResolveFile } from '../utils/opfsPath'
 import { gzipCompress, gzipDecompress, isGzipped } from './compression'
 
 const DEFAULT_FILE = 'store.json'
@@ -126,8 +127,11 @@ async function createGzipOpfsPersister(
   getCompression: () => CompressionOptions,
   error: Ref<Error | null>,
 ): Promise<Persister<Persists>> {
+  // same path grammar as the worker, so nested store files ('data/notes.json') work
   const dir = await navigator.storage.getDirectory()
-  const handle = await dir.getFileHandle(file, { create: true })
+  const handle = await opfsResolveFile(dir, file, { create: true })
+  if (!handle)
+    throw new Error(`Cannot open ${file} in OPFS`)
   // ponytail: whole-file reload, not a merge — two tabs saving in the same instant can still
   // race; MergeableStore + a Synchronizer is the upgrade path if that gap needs closing.
   // Opened lazily so delPersisterListener can close it (persister.destroy() routes through

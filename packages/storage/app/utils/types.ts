@@ -45,18 +45,54 @@ export type StoreApi = {
 
 export type TableRow = Record<string, unknown> & { id: string }
 
-export type OpfsEntry = { name: string, size: number }
+/**
+ * A node in the OPFS tree. `kind` is the discriminant: files carry size/lastModified,
+ * directories carry children when they were walked recursively.
+ */
+export type OpfsFileNode = {
+  kind: 'file'
+  /** Basename, e.g. 'a.json'. */
+  name: string
+  /** Full path from the OPFS root, e.g. 'notes/2024/a.json'. Never leading-slashed. */
+  path: string
+  size: number
+  lastModified: number
+}
+
+export type OpfsDirectoryNode = {
+  kind: 'directory'
+  name: string
+  path: string
+  /** Set by `opfsTree()` only. Undefined from `opfsList()` — children were not walked. */
+  children?: OpfsNode[]
+}
+
+export type OpfsNode = OpfsFileNode | OpfsDirectoryNode
+
+export type OpfsDeleteOptions = {
+  /** Delete a directory with contents. Default false: a non-empty directory throws instead. */
+  recursive?: boolean
+}
 
 export type OpfsWriteOptions = {
   /** Compress on write: `true` for defaults, or fflate `{ level, mem }`. Reads always decompress transparently. */
   gzip?: boolean | Pick<CompressionOptions, 'level' | 'mem'>
 }
 
-/** Worker message protocol — shared by useOpfs (rpc) and opfs.worker. */
+/** Worker message protocol — shared by useOpfs (rpc) and opfs.worker. Paths are root-relative. */
 export type OpfsRequest
-  = | { id: number, op: 'read', name: string }
-    | { id: number, op: 'write', name: string, data: string | Uint8Array, gzip?: OpfsWriteOptions['gzip'] }
-    | { id: number, op: 'list' }
-    | { id: number, op: 'delete', name: string }
-    | { id: number, op: 'exportZip' }
-    | { id: number, op: 'importZip', data: Uint8Array }
+  = | { id: number, op: 'read', path: string }
+    | { id: number, op: 'write', path: string, data: string | Uint8Array, gzip?: OpfsWriteOptions['gzip'] }
+    | { id: number, op: 'list', path: string, recursive: boolean }
+    | { id: number, op: 'stat', path: string }
+    | { id: number, op: 'mkdir', path: string }
+    | { id: number, op: 'remove', path: string, recursive: boolean }
+    | { id: number, op: 'move', from: string, to: string }
+    | { id: number, op: 'copy', from: string, to: string }
+    | { id: number, op: 'exportZip', path: string }
+    | { id: number, op: 'importZip', path: string, data: Uint8Array }
+
+/** Worker response. `name` carries the original error name (NotFoundError, OpfsPathError, …). */
+export type OpfsResponse
+  = | { id: number, ok: true, result?: unknown }
+    | { id: number, ok: false, error: string, name?: string }

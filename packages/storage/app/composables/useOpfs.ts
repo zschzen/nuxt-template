@@ -1,4 +1,6 @@
-import type { OpfsEntry, OpfsRequest, OpfsWriteOptions } from '../utils/types'
+import type { OpfsDeleteOptions, OpfsNode, OpfsRequest, OpfsResponse, OpfsWriteOptions } from '../utils/types'
+
+type WithoutId<T> = T extends { id: number } ? Omit<T, 'id'> : never
 
 const decoder = new TextDecoder()
 
@@ -13,69 +15,117 @@ const pending = new Map<number, { resolve: (v: unknown) => void, reject: (e: Err
 function getWorker(): Worker {
   if (!isOpfsSupported)
     throw new Error('OPFS is not supported in this browser')
-  if (!worker) {
-    worker = new Worker(new URL('../workers/opfs.worker.ts', import.meta.url), { type: 'module' })
-    worker.onmessage = (event: MessageEvent) => {
-      const res = event.data as { id: number, ok: boolean, result?: unknown, error?: string }
-      const entry = pending.get(res.id)
-      if (!entry)
-        return
-      pending.delete(res.id)
-      if (res.ok)
-        entry.resolve(res.result)
-      else entry.reject(new Error(res.error ?? 'OPFS worker error'))
-    }
+
+  if (worker) {
+    return worker
   }
+
+  worker = new Worker(new URL('../workers/opfs.worker.ts', import.meta.url), { type: 'module' })
+  worker.onmessage = (event: MessageEvent<OpfsResponse>) => {
+    const res = event.data
+    const entry = pending.get(res.id)
+    if (!entry)
+      return
+
+    pending.delete(res.id)
+    if (res.ok) {
+      entry.resolve(res.result)
+      return
+    }
+
+    // rebuild the worker-side error name so callers can branch on
+    // NotFoundError / InvalidModificationError / OpfsPathError
+    const error = new Error(res.error ?? 'OPFS worker error')
+    if (res.name)
+      error.name = res.name
+    entry.reject(error)
+  }
+
   return worker
 }
 
-type WithoutId<T> = T extends { id: number } ? Omit<T, 'id'> : never
-
 function rpc<T>(req: WithoutId<OpfsRequest>): Promise<T> {
   const id = ++seq
+
   return new Promise<T>((resolve, reject) => {
     pending.set(id, { resolve: resolve as (v: unknown) => void, reject })
     getWorker().postMessage({ ...req, id })
   })
 }
 
-export function opfsRead(name: string): Promise<Uint8Array | null> {
-  return rpc<Uint8Array | null>({ op: 'read', name })
+export function opfsRead(path: string): Promise<Uint8Array | null> {
+  return rpc<Uint8Array | null>({ op: 'read', path })
 }
 
-export async function opfsReadText(name: string): Promise<string | null> {
-  const bytes = await opfsRead(name)
+export async function opfsReadText(path: string): Promise<string | null> {
+  const bytes = await opfsRead(path)
   return bytes ? decoder.decode(bytes) : null
 }
 
-export async function opfsReadJson<T>(name: string): Promise<T | null> {
-  const text = await opfsReadText(name)
+export async function opfsReadJson<T>(path: string): Promise<T | null> {
+  const text = await opfsReadText(path)
   return text ? JSON.parse(text) as T : null
 }
 
-export function opfsWrite(name: string, data: string | Uint8Array, options: OpfsWriteOptions = {}): Promise<number> {
-  return rpc<number>({ op: 'write', name, data, gzip: options.gzip })
+/** Write bytes or text, creating any missing parent directories. Returns bytes stored. */
+export function opfsWrite(path: string, data: string | Uint8Array, options: OpfsWriteOptions = {}): Promise<number> {
+  return rpc<number>({ op: 'write', path, data, gzip: options.gzip })
 }
 
-export function opfsWriteJson(name: string, value: unknown, options: OpfsWriteOptions = {}): Promise<number> {
-  return opfsWrite(name, JSON.stringify(value), options)
+export function opfsWriteJson(path: string, value: unknown, options: OpfsWriteOptions = {}): Promise<number> {
+  return opfsWrite(path, JSON.stringify(value), options)
 }
 
-// ponytail: flat filenames only — nested paths need recursive mkdir in the worker
-export function opfsList(): Promise<OpfsEntry[]> {
-  return rpc<OpfsEntry[]>({ op: 'list' })
+/** Direct children of a directory, directories first. Directory nodes carry no `children`. */
+export function opfsList(path = ''): Promise<OpfsNode[]> {
+  return rpc<OpfsNode[]>({ op: 'list', path, recursive: false })
 }
 
-export function opfsDelete(name: string): Promise<void> {
-  return rpc<void>({ op: 'delete', name })
+/** Whole subtree in one walk. Every directory node carries `children`. */
+export function opfsTree(path = ''): Promise<OpfsNode[]> {
+  return rpc<OpfsNode[]>({ op: 'list', path, recursive: true })
 }
 
-export async function opfsExportZip(): Promise<Blob> {
-  const bytes = await rpc<Uint8Array>({ op: 'exportZip' })
+/** Metadata for one entry, `null` when it does not exist. */
+export function opfsStat(path: string): Promise<OpfsNode | null> {
+  return rpc<OpfsNode | null>({ op: 'stat', path })
+}
+
+export async function opfsExists(path: string): Promise<boolean> {
+  return await opfsStat(path) !== null
+}
+
+/** Create a directory and any missing parents. Idempotent. */
+export function opfsMkdir(path: string): Promise<void> {
+  return rpc<void>({ op: 'mkdir', path })
+}
+
+/**
+ * Delete a file or directory. Missing entries are a no-op.
+ * A non-empty directory throws `InvalidModificationError` unless `recursive` is set.
+ */
+export function opfsDelete(path: string, options: OpfsDeleteOptions = {}): Promise<void> {
+  return rpc<void>({ op: 'remove', path, recursive: options.recursive ?? false })
+}
+
+/** Move or rename. `to` is the full destination path, not a parent directory. */
+export function opfsMove(from: string, to: string): Promise<void> {
+  return rpc<void>({ op: 'move', from, to })
+}
+
+/** Copy a file or a whole directory. `to` is the full destination path. */
+export function opfsCopy(from: string, to: string): Promise<void> {
+  return rpc<void>({ op: 'copy', from, to })
+}
+
+/** Zip a subtree (default: everything). Entry names are full paths, so structure round-trips. */
+export async function opfsExportZip(path = ''): Promise<Blob> {
+  const bytes = await rpc<Uint8Array>({ op: 'exportZip', path })
   return new Blob([bytes as BlobPart], { type: 'application/zip' })
 }
 
-export async function opfsImportZip(file: File): Promise<void> {
+/** Extract an archive under `path`. Entries that fail path validation are skipped. */
+export async function opfsImportZip(file: File, path = ''): Promise<void> {
   const buffer = await file.arrayBuffer()
-  await rpc<void>({ op: 'importZip', data: new Uint8Array(buffer) })
+  await rpc<void>({ op: 'importZip', path, data: new Uint8Array(buffer) })
 }
