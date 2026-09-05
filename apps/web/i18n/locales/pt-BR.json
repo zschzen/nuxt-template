@@ -3,17 +3,21 @@
     "header": {
       "title": "Notas locais"
     },
-    "status": {
-      "installed": "Instalado",
-      "notInstalled": "Não instalado",
+    "appInfo": {
       "online": "On-line",
-      "offline": "Off-line"
+      "offline": "Off-line",
+      "onlineTip": "Se este dispositivo está conectado no momento.",
+      "installed": "Instalado",
+      "install": "Instalar PWA",
+      "installTip": "Instale o app neste dispositivo para acesso rápido off-line.",
+      "persisted": "Persistido",
+      "notPersisted": "Memória Não Persistida",
+      "persistedTip": "Se as notas sobrevivem a uma limpeza do armazenamento do navegador."
     },
     "unsupported": {
       "opfs": "Este navegador não suporta OPFS (é necessário Chrome/Edge 102+, Firefox 111+ ou Safari 16.4+). Recursos de dados desativados."
     },
     "error": {
-      "saveFailed": "Algo deu errado ao salvar seus dados. Sua última alteração pode não ter sido salva.",
       "dismiss": "Dispensar"
     },
     "editor": {
@@ -23,22 +27,29 @@
       "bodyPlaceholder": "Comece a escrever…",
       "autosaves": "salvamento automático"
     },
-    "list": {
+    "notes": {
       "title": "Notas",
       "new": "Nova nota",
+      "newFolder": "Nova pasta",
+      "newFolderTitle": "Nova pasta",
+      "renameTitle": "Renomear",
+      "namePlaceholder": "Nome",
+      "rename": "Renomear",
+      "delete": "Excluir",
+      "refresh": "Atualizar notas",
+      "collapseAll": "Recolher todas as pastas",
+      "moreActions": "Mais ações",
+      "empty": "Nenhuma nota ainda.",
       "import": "Importar ZIP",
       "export": "Exportar ZIP",
-      "deleteNote": "Excluir nota"
+      "deleteTitle": "Excluir?",
+      "deleteFileBody": "Excluir permanentemente “{name}” deste dispositivo? Não é possível desfazer.",
+      "deleteFolderBody": "Excluir permanentemente “{name}” e todo o conteúdo dela? Não é possível desfazer."
     },
     "footer": {
       "localOnly": "Os dados nunca saem deste dispositivo",
-      "persist": "Persistir",
-      "install": "Instalar",
+      "persistDenied": "O navegador recusou o armazenamento persistente",
       "loading": "Carregando armazenamento local…"
-    },
-    "dialog": {
-      "deleteTitle": "Excluir nota?",
-      "deleteBody": "Excluir permanentemente “{title}” deste dispositivo? Não é possível desfazer."
     }
   }
 }

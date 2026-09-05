@@ -1,134 +1,77 @@
 <script setup lang="ts">
 import { Button } from '@template/ui/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@template/ui/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@template/ui/components/ui/dropdown-menu'
+import { Input } from '@template/ui/components/ui/input'
 import { Separator } from '@template/ui/components/ui/separator'
-import { computed, onMounted, ref } from 'vue'
-
-type Entry = {
-  id: string
-  title: string
-  body: string
-  size: number
-}
+import { TooltipProvider } from '@template/ui/components/ui/tooltip'
+import { onMounted, ref } from 'vue'
 
 definePageMeta({ layout: 'default' })
 
-const pwa = usePWA()
-const { t } = useI18n()
-
 const supported = isOpfsSupported
-const online = useOnline()
-const { persisted, refresh, requestPersist } = useStorageStatus()
+const { refresh } = useStorageStatus()
 
-const { store, notes, error, ready, reload } = useNotes()
+const {
+  tree,
+  selectedPath,
+  notePath,
+  title,
+  body,
+  noteSize,
+  busy,
+  fileError,
+  promptOpen,
+  promptName,
+  promptTarget,
+  pendingNode,
+  nodeDeleteOpen,
+  canSave,
+  noteCount,
+  refreshTree,
+  openNode,
+  newNote,
+  saveNote,
+  askNewFolder,
+  askRename,
+  confirmPrompt,
+  askRemoveNode,
+  confirmRemoveNode,
+  exportAll,
+  importArchive,
+  migrateLegacy,
+} = useNoteFiles()
 
-const entries = computed<Entry[]>(() =>
-  notes.value
-    .map(row => ({
-      id: row.id,
-      title: String(row.title ?? ''),
-      body: String(row.body ?? ''),
-      size: JSON.stringify(row).length,
-    })),
-)
-const selectedId = ref<string | null>(null)
-const title = ref('')
-const body = ref('')
-const busy = ref(false)
-const pendingDelete = ref<Entry | null>(null)
-const deleteOpen = ref(false)
-
-const canSave = computed(() => !busy.value && title.value.trim().length > 0)
-const selectedEntry = computed(() =>
-  entries.value.find(entry => entry.id === selectedId.value) ?? null,
-)
-
-const statusLabel = computed(() =>
-  `${pwa?.isPWAInstalled ? t('web.status.installed') : t('web.status.notInstalled')} · ${online.value ? t('web.status.online') : t('web.status.offline')}`,
-)
-
-function newNote() {
-  selectedId.value = null
-  title.value = ''
-  body.value = ''
-}
-
-function openNote(id: string) {
-  const entry = entries.value.find(entry => entry.id === id)
-  if (!entry)
-    return
-  selectedId.value = id
-  title.value = entry.title
-  body.value = entry.body
-}
-
-function saveNote() {
-  if (!canSave.value)
-    return
-  if (!store.value) {
-    error.value = new Error('Notes store is not ready')
-    return
-  }
-  const id = selectedId.value ?? crypto.randomUUID()
-  store.value.setRow('notes', id, {
-    title: title.value.trim(),
-    body: body.value,
-  })
-  selectedId.value = id
-}
-
-async function confirmDelete() {
-  if (!pendingDelete.value)
-    return
-  store.value?.delRow('notes', pendingDelete.value.id)
-  if (selectedId.value === pendingDelete.value.id)
-    await newNote()
+// storage-status numbers (persisted/quota) live outside the notes tree,
+// so refresh them after every mutation that touches OPFS.
+async function onSave() {
+  await saveNote()
   await refresh()
-  deleteOpen.value = false
-  pendingDelete.value = null
 }
 
-function askDelete(entry: Entry) {
-  pendingDelete.value = {
-    ...entry,
-    title: entry.id === selectedId.value ? (title.value.trim() || entry.title) : entry.title,
-  }
-  deleteOpen.value = true
+async function onConfirmPrompt() {
+  await confirmPrompt()
+  await refresh()
 }
 
-async function exportAll() {
-  const blob = await opfsExportZip()
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'local-first-backup.zip'
-  a.click()
-  URL.revokeObjectURL(url)
+async function onConfirmRemove() {
+  await confirmRemoveNode()
+  await refresh()
 }
 
-async function importArchive(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-  if (!file)
-    return
-  busy.value = true
-  try {
-    await opfsImportZip(file)
-    await reload()
-    await refresh()
-  }
-  finally {
-    busy.value = false
-    input.value = ''
-  }
+async function onImport(event: Event) {
+  await importArchive(event)
+  await refresh()
 }
+
+const archiveInput = ref<HTMLInputElement | null>(null)
 
 onMounted(async () => {
   if (!supported)
     return
-  const api = await ready
-  if (api)
-    await refresh()
+  await migrateLegacy()
+  await refresh()
+  await refreshTree()
 })
 </script>
 
@@ -140,10 +83,7 @@ onMounted(async () => {
       </h1>
       <div class="flex gap-2.5 items-center">
         <LocaleSwitcher />
-        <div class="flex gap-1.5 items-center">
-          <span class="rounded-full size-1.5" :class="online ? 'bg-green-500' : 'bg-orange-400'" />
-          <span class="text-[11px] text-muted-foreground">{{ statusLabel }}</span>
-        </div>
+        <AppInfo @error="fileError = $event" />
       </div>
     </header>
 
@@ -155,13 +95,13 @@ onMounted(async () => {
       </div>
 
       <template v-else>
-        <div v-if="error" class="text-sm text-red-700 p-4 border border-red-300 rounded-md bg-red-50 flex gap-3 items-center justify-between dark:text-red-300 dark:border-red-800 dark:bg-red-950">
-          <span>{{ $t('web.error.saveFailed') }}</span>
+        <div v-if="fileError" class="text-sm text-red-700 p-4 border border-red-300 rounded-md bg-red-50 flex gap-3 items-center justify-between dark:text-red-300 dark:border-red-800 dark:bg-red-950">
+          <span class="font-mono">{{ fileError }}</span>
           <button
             type="button"
             class="text-red-700 shrink-0 dark:text-red-300"
             :aria-label="$t('web.error.dismiss')"
-            @click="error = null"
+            @click="fileError = null"
           >
             <span class="i-lucide-x shrink-0 size-3.5" />
           </button>
@@ -170,7 +110,7 @@ onMounted(async () => {
         <section class="flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] text-muted-foreground tracking-[0.12em] font-medium uppercase">{{ $t('web.editor.label') }}</span>
-            <Button :disabled="busy" @click="saveNote">
+            <Button :disabled="!canSave" @click="onSave">
               <span class="i-lucide-save shrink-0 size-4" />
               {{ $t('web.editor.save') }}
             </Button>
@@ -179,13 +119,13 @@ onMounted(async () => {
             v-model="title"
             :placeholder="$t('web.editor.titlePlaceholder')"
             class="text-[30px] text-foreground leading-[1.2] font-semibold font-serif pb-1.5 pt-0.5 outline-none border-b border-border bg-transparent w-full placeholder:text-muted-foreground/60"
-            @keydown.ctrl.s.prevent="saveNote"
-            @keydown.meta.s.prevent="saveNote"
+            @keydown.ctrl.s.prevent="onSave"
+            @keydown.meta.s.prevent="onSave"
           >
-          <div v-if="selectedEntry" class="flex gap-[7px] items-center">
+          <div v-if="notePath" class="flex gap-[7px] items-center">
             <span class="rounded-full bg-green-500 size-1.5" />
             <span class="text-xs text-muted-foreground font-mono">
-              {{ formatStorageBytes(selectedEntry.size) }} · {{ $t('web.editor.autosaves') }}
+              {{ noteSize !== null ? formatStorageBytes(noteSize) : '' }} · {{ $t('web.editor.autosaves') }}
             </span>
           </div>
           <textarea
@@ -196,72 +136,55 @@ onMounted(async () => {
         </section>
 
         <section class="flex flex-col gap-2">
-          <div class="flex items-center justify-between">
-            <div class="flex gap-2 items-center">
-              <span class="text-[11px] text-muted-foreground tracking-[1px] font-medium uppercase">{{ $t('web.list.title') }}</span>
-              <span class="text-xs text-muted-foreground font-mono">{{ entries.length }}</span>
-            </div>
-            <div class="flex gap-2 items-center">
-              <Button :disabled="busy" @click="newNote">
-                <span class="i-lucide-plus shrink-0 size-4" />
-                {{ $t('web.list.new') }}
-              </Button>
-              <label class="inline-flex cursor-pointer">
-                <input
-                  type="file"
-                  accept=".zip"
-                  class="hidden"
-                  :disabled="busy"
-                  @change="importArchive"
-                >
-                <Button
-                  variant="outline"
-                  :disabled="busy"
-                >
-                  <span class="i-lucide-upload shrink-0 size-4" />
-                  {{ $t('web.list.import') }}
-                </Button>
-              </label>
-              <Button
-                variant="outline"
+          <TooltipProvider :delay-duration="300">
+            <div class="p-1 border border-border rounded-sm max-h-52 [scrollbar-width:thin] overflow-y-auto">
+              <input
+                ref="archiveInput"
+                type="file"
+                accept=".zip"
+                class="hidden"
                 :disabled="busy"
-                @click="exportAll"
+                @change="onImport"
               >
-                <span class="i-lucide-download shrink-0 size-4" />
-                {{ $t('web.list.export') }}
-              </Button>
+              <FileTree
+                :nodes="tree"
+                :selected="selectedPath"
+                :title="$t('web.notes.title')"
+                :count="noteCount"
+                @select="openNode"
+                @rename="askRename"
+                @remove="askRemoveNode"
+                @create-folder="askNewFolder"
+                @create-file="newNote"
+                @refresh="refreshTree"
+              >
+                <template #menu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                      <Button
+                        variant="ghost"
+                        class="text-muted-foreground p-0 size-6 hover:text-foreground"
+                        :aria-label="$t('web.notes.moreActions')"
+                        :title="$t('web.notes.moreActions')"
+                      >
+                        <span class="i-lucide-ellipsis shrink-0 size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem :disabled="busy" @select="archiveInput?.click()">
+                        <span class="i-lucide-upload shrink-0 size-4" />
+                        {{ $t('web.notes.import') }}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem :disabled="busy" @select="exportAll">
+                        <span class="i-lucide-download shrink-0 size-4" />
+                        {{ $t('web.notes.export') }}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </template>
+              </FileTree>
             </div>
-          </div>
-          <ul class="flex flex-col h-40 [scrollbar-width:thin] overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground [&::-webkit-scrollbar-track]:bg-border [&::-webkit-scrollbar]:w-1">
-            <li
-              v-for="entry in entries"
-              :key="entry.id"
-              class="group py-2.5 pl-0 pr-3 border-b border-border flex cursor-pointer items-center justify-between"
-              @click="openNote(entry.id)"
-            >
-              <div class="flex gap-2 items-center">
-                <span
-                  v-if="entry.id === selectedId"
-                  class="rounded-full bg-green-500 size-1.5"
-                />
-                <span
-                  class="text-[15px] leading-[1.2] font-serif"
-                  :class="entry.id === selectedId ? 'font-semibold text-foreground' : 'text-muted-foreground'"
-                >{{ entry.title }}</span>
-              </div>
-              <div class="flex gap-2.5 items-center">
-                <span class="text-[11px] text-muted-foreground font-mono">{{ formatStorageBytes(entry.size) }}</span>
-                <Button
-                  variant="ghost"
-                  :aria-label="$t('web.list.deleteNote')"
-                  class="text-muted-foreground p-0 size-4 hover:text-destructive"
-                  @click.stop="askDelete(entry)"
-                >
-                  <span class="i-lucide-x shrink-0 size-3" />
-                </Button>
-              </div>
-            </li>
-          </ul>
+          </TooltipProvider>
         </section>
 
         <footer class="mt-auto pt-3 border-t border-border flex items-center justify-between">
@@ -302,26 +225,6 @@ onMounted(async () => {
                 rel="noopener"
               >TinyBase</a>
             </Button>
-            <template v-if="persisted === false">
-              <span class="text-[11px] text-muted-foreground">·</span>
-              <Button
-                variant="link"
-                class="text-[11px] p-0 h-auto"
-                @click="requestPersist"
-              >
-                {{ $t('web.footer.persist') }}
-              </Button>
-            </template>
-            <template v-if="pwa?.showInstallPrompt">
-              <span class="text-[11px] text-muted-foreground">·</span>
-              <Button
-                variant="link"
-                class="text-[11px] p-0 h-auto"
-                @click="pwa?.install()"
-              >
-                {{ $t('web.footer.install') }}
-              </Button>
-            </template>
           </div>
         </footer>
       </template>
@@ -333,30 +236,65 @@ onMounted(async () => {
       </template>
     </ClientOnly>
 
-    <Dialog :open="deleteOpen" @update:open="deleteOpen = $event">
+    <Dialog :open="promptOpen" @update:open="promptOpen = $event">
       <DialogContent
         hide-close
         overlay-class="bg-black/35"
         class="p-5 rounded-md gap-3 max-w-[360px] shadow-[0_12px_28px_rgba(0,0,0,0.15)] sm:max-w-[360px]"
       >
         <DialogTitle class="text-base tracking-normal font-semibold">
-          {{ $t('web.dialog.deleteTitle') }}
+          {{ promptTarget.mode === 'rename' ? $t('web.notes.renameTitle') : $t('web.notes.newFolderTitle') }}
+        </DialogTitle>
+        <Input
+          v-model="promptName"
+          :placeholder="$t('web.notes.namePlaceholder')"
+          @keydown.enter.prevent="onConfirmPrompt"
+        />
+        <DialogFooter class="gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            @click="promptOpen = false"
+          >
+            {{ $t('common.cancel') }}
+          </Button>
+          <Button
+            size="sm"
+            :disabled="!promptName.trim()"
+            @click="onConfirmPrompt"
+          >
+            {{ $t('common.confirm') }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <Dialog :open="nodeDeleteOpen" @update:open="nodeDeleteOpen = $event">
+      <DialogContent
+        hide-close
+        overlay-class="bg-black/35"
+        class="p-5 rounded-md gap-3 max-w-[360px] shadow-[0_12px_28px_rgba(0,0,0,0.15)] sm:max-w-[360px]"
+      >
+        <DialogTitle class="text-base tracking-normal font-semibold">
+          {{ $t('web.notes.deleteTitle') }}
         </DialogTitle>
         <DialogDescription class="text-sm leading-[1.5]">
-          {{ $t('web.dialog.deleteBody', { title: pendingDelete?.title }) }}
+          {{ pendingNode?.kind === 'directory'
+            ? $t('web.notes.deleteFolderBody', { name: pendingNode?.name })
+            : $t('web.notes.deleteFileBody', { name: pendingNode ? noteDisplayName(pendingNode.name) : '' }) }}
         </DialogDescription>
         <DialogFooter class="gap-2">
           <Button
             variant="outline"
             size="sm"
-            @click="deleteOpen = false"
+            @click="nodeDeleteOpen = false"
           >
             {{ $t('common.cancel') }}
           </Button>
           <Button
             variant="destructive"
             size="sm"
-            @click="confirmDelete"
+            @click="onConfirmRemove"
           >
             {{ $t('common.delete') }}
           </Button>

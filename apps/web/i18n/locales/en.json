@@ -3,17 +3,21 @@
     "header": {
       "title": "Local Notes"
     },
-    "status": {
-      "installed": "Installed",
-      "notInstalled": "Not installed",
+    "appInfo": {
       "online": "Online",
-      "offline": "Offline"
+      "offline": "Offline",
+      "onlineTip": "Whether this device is currently connected.",
+      "installed": "Installed",
+      "install": "Install PWA",
+      "installTip": "Install the app on this device for quick offline access.",
+      "persisted": "Persisted",
+      "notPersisted": "Memory Not Persisted",
+      "persistedTip": "Whether notes survive a browser storage cleanup."
     },
     "unsupported": {
       "opfs": "This browser doesn't support OPFS (needs Chrome/Edge 102+, Firefox 111+, or Safari 16.4+). Data features are disabled."
     },
     "error": {
-      "saveFailed": "Something went wrong saving your data. Your last change may not be saved.",
       "dismiss": "Dismiss"
     },
     "editor": {
@@ -23,22 +27,29 @@
       "bodyPlaceholder": "Start writing…",
       "autosaves": "autosaves"
     },
-    "list": {
+    "notes": {
       "title": "Notes",
       "new": "New note",
+      "newFolder": "New folder",
+      "newFolderTitle": "New folder",
+      "renameTitle": "Rename",
+      "namePlaceholder": "Name",
+      "rename": "Rename",
+      "delete": "Delete",
+      "refresh": "Refresh notes",
+      "collapseAll": "Collapse all folders",
+      "moreActions": "More actions",
+      "empty": "No notes yet.",
       "import": "Import ZIP",
       "export": "Export ZIP",
-      "deleteNote": "Delete note"
+      "deleteTitle": "Delete?",
+      "deleteFileBody": "Permanently delete “{name}” from this device? This can’t be undone.",
+      "deleteFolderBody": "Permanently delete “{name}” and everything inside it? This can’t be undone."
     },
     "footer": {
       "localOnly": "Data never leaves this device",
-      "persist": "Persist",
-      "install": "Install",
+      "persistDenied": "Browser declined persistent storage",
       "loading": "Loading local storage…"
-    },
-    "dialog": {
-      "deleteTitle": "Delete note?",
-      "deleteBody": "Permanently delete “{title}” from this device? This can’t be undone."
     }
   }
 }
