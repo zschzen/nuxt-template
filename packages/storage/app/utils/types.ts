@@ -1,5 +1,6 @@
 import type { Store } from 'tinybase'
 import type { Persister, Persists } from 'tinybase/persisters'
+import type { Ref } from 'vue'
 
 /**
  * Public contract of @template/storage. Pure types — no runtime.
@@ -29,6 +30,7 @@ export type StoreOptions = {
 
 export type StoreApi = {
   store: Store
+  error: Ref<Error | null>
   save: () => Promise<void>
   reload: () => Promise<void>
 }

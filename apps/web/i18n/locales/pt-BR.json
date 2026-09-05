@@ -12,6 +12,10 @@
     "unsupported": {
       "opfs": "Este navegador não suporta OPFS (é necessário Chrome/Edge 102+, Firefox 111+ ou Safari 16.4+). Recursos de dados desativados."
     },
+    "error": {
+      "saveFailed": "Algo deu errado ao salvar seus dados. Sua última alteração pode não ter sido salva.",
+      "dismiss": "Dispensar"
+    },
     "editor": {
       "label": "Nome da nota",
       "save": "Salvar nota",

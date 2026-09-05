@@ -20,7 +20,7 @@ const supported = isOpfsSupported
 const online = useOnline()
 const { persisted, refresh, requestPersist } = useStorageStatus()
 
-const { store, notes, ready, reload } = useNotes()
+const { store, notes, error, ready, reload } = useNotes()
 
 const entries = computed<Entry[]>(() =>
   notes.value
@@ -65,8 +65,12 @@ function openNote(id: string) {
 function saveNote() {
   if (!canSave.value)
     return
+  if (!store.value) {
+    error.value = new Error('Notes store is not ready')
+    return
+  }
   const id = selectedId.value ?? crypto.randomUUID()
-  store.value?.setRow('notes', id, {
+  store.value.setRow('notes', id, {
     title: title.value.trim(),
     body: body.value,
   })
@@ -151,6 +155,18 @@ onMounted(async () => {
       </div>
 
       <template v-else>
+        <div v-if="error" class="text-sm text-red-700 p-4 border border-red-300 rounded-md bg-red-50 flex gap-3 items-center justify-between dark:text-red-300 dark:border-red-800 dark:bg-red-950">
+          <span>{{ $t('web.error.saveFailed') }}</span>
+          <button
+            type="button"
+            class="text-red-700 shrink-0 dark:text-red-300"
+            :aria-label="$t('web.error.dismiss')"
+            @click="error = null"
+          >
+            <span class="i-lucide-x shrink-0 size-3.5" />
+          </button>
+        </div>
+
         <section class="flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] text-muted-foreground tracking-[0.12em] font-medium uppercase">{{ $t('web.editor.label') }}</span>

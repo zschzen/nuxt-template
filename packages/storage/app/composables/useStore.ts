@@ -1,5 +1,6 @@
 import type { Store } from 'tinybase'
 import type { Persister, Persists } from 'tinybase/persisters'
+import type { Ref } from 'vue'
 import type { CompressionOptions, StoreApi, StoreOptions, TableRow } from '../utils/types'
 import { createStore } from 'tinybase'
 import { createCustomPersister } from 'tinybase/persisters'
@@ -33,20 +34,24 @@ async function init(file: string, options: StoreOptions): Promise<StoreApi> {
   if (typeof window === 'undefined')
     throw new Error('createOpfsStore is client-only')
   const store = createStore()
+  const error = shallowRef<Error | null>(null)
   // value-or-getter: the app owns compression state; the library reads it fresh at each write
   const getCompression = (): CompressionOptions =>
     typeof options.compression === 'function' ? options.compression() : options.compression ?? { enabled: false }
 
   const persister = options.createPersister
     ? await options.createPersister(store)
-    : await createGzipOpfsPersister(store, file, getCompression)
+    : await createGzipOpfsPersister(store, file, getCompression, error)
 
   // load must precede autosave: a failed load throws here and never reaches save
   await persister.load()
   await persister.startAutoSave()
+  // pairs with the persister's BroadcastChannel listener below to keep tabs on the same file in sync
+  await persister.startAutoLoad()
 
   return {
     store,
+    error,
     save: async () => { await persister.save() },
     reload: async () => { await persister.load() },
   }
@@ -58,36 +63,47 @@ async function init(file: string, options: StoreOptions): Promise<StoreApi> {
  */
 export function useOpfsStore(options: StoreOptions = {}): {
   store: Ref<Store | null>
+  error: Ref<Error | null>
   ready: Promise<StoreApi | null>
 } {
   const store = shallowRef<Store | null>(null)
+  const error = shallowRef<Error | null>(null)
 
   const ready = typeof window !== 'undefined'
     ? createOpfsStore(options)
         .then((api) => {
           store.value = api.store
+          watch(api.error, (value) => {
+            error.value = value
+          }, { immediate: true })
           return api
         })
-        .catch((error) => {
-          console.error('[useOpfsStore] store init failed', error)
+        .catch((err) => {
+          error.value = err instanceof Error ? err : new Error(String(err))
           return null
         })
     : Promise.resolve(null)
 
-  return { store, ready }
+  return { store, error, ready }
 }
 
 /**
  * OPFS persister with transparent compression: gzip on write when enabled,
  * magic-byte sniff on read so both formats load regardless of the flag.
+ * Cross-tab: broadcasts on save and reloads on a peer tab's broadcast (paired
+ * with startAutoLoad in init()) so tabs on the same file stay in sync.
  */
 async function createGzipOpfsPersister(
   store: Store,
   file: string,
   getCompression: () => CompressionOptions,
+  error: Ref<Error | null>,
 ): Promise<Persister<Persists>> {
   const dir = await navigator.storage.getDirectory()
   const handle = await dir.getFileHandle(file, { create: true })
+  // ponytail: whole-file reload, not a merge — two tabs saving in the same instant can still
+  // race; MergeableStore + a Synchronizer is the upgrade path if that gap needs closing.
+  const channel = new BroadcastChannel(`template-storage:${file}`)
 
   const readBytes = async (): Promise<Uint8Array | null> => {
     try {
@@ -122,10 +138,12 @@ async function createGzipOpfsPersister(
       if (opts.enabled)
         bytes = gzipCompress(bytes, opts)
       await writeBytes(bytes)
+      error.value = null
+      channel.postMessage(1)
     },
-    () => 0,
-    () => {},
-    undefined,
+    (listener) => { channel.onmessage = () => listener() },
+    () => { channel.onmessage = null },
+    (err) => { error.value = err instanceof Error ? err : new Error(String(err)) },
     1 as Persists,
   )
 }
