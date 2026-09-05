@@ -24,15 +24,23 @@ export type StoreOptions = {
   file?: string
   /** Compression policy: value or getter. Pass a getter to change at runtime; applies on the next autosave. Default: disabled. */
   compression?: StoreCompression
-  /** Backend seam. Default: gzip-aware OpfsPersister on `file`. Compression does not apply to custom persisters. */
-  createPersister?: (store: Store) => Promise<Persister<Persists>>
+  /**
+   * Backend seam. Default: gzip-aware OpfsPersister on `file`. Compression does not apply to custom persisters.
+   * `onIgnoredError` must be wired into the backend's own error hook — TinyBase's `load()` swallows read
+   * failures, and this callback is what tells the store layer not to autosave over an unreadable file.
+   */
+  createPersister?: (store: Store, onIgnoredError: (error: unknown) => void) => Promise<Persister<Persists>>
 }
 
 export type StoreApi = {
   store: Store
   error: Ref<Error | null>
+  /** Force a write. Throws instead of overwriting a file that failed to load. */
   save: () => Promise<void>
+  /** Re-read from the backend. Resumes autosave if the file has become readable again. */
   reload: () => Promise<void>
+  /** Release listeners, the broadcast channel and the shared-store cache entry. */
+  destroy: () => Promise<void>
 }
 
 export type TableRow = Record<string, unknown> & { id: string }

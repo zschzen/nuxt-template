@@ -13,6 +13,8 @@
     "clean": "rm -rf .nuxt .playground/.nuxt .turbo",
     "postinstall": "nuxi prepare .playground",
     "lint": "eslint .",
+    "test": "vitest",
+    "test:run": "vitest run",
     "lint:fix": "eslint . --fix --cache",
     "typecheck": "vue-tsc --noEmit"
   },
@@ -22,8 +24,11 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "catalog:linting",
+    "@nuxt/test-utils": "catalog:testing",
+    "happy-dom": "catalog:testing",
     "nuxt": "catalog:core",
     "typescript": "catalog:types",
+    "vitest": "catalog:testing",
     "vue": "catalog:core",
     "vue-tsc": "catalog:types"
   }
